@@ -386,7 +386,7 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
                 <MessageCircle className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-semibold">Trợ lý Ngũ Hành Sơn</h3>
+                <h3 className="font-semibold">Nui Non Guide</h3>
                 <p className="text-xs opacity-80">Luôn sẵn sàng hỗ trợ bạn</p>
               </div>
             </div>

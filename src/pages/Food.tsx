@@ -2,63 +2,72 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Utensils } from "lucide-react";
+import { Utensils, Star } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Food = () => {
   const dishes = [
     {
       name: "Mì Quảng",
       description: "Món mì đặc trưng của Quảng Nam - Đà Nẵng với nước dùng đậm đà, thịt heo, tôm, trứng và rau thơm",
-      price: "30.000 - 50.000đ",
+      rating: 4.8,
+      reviewCount: 256,
       location: "Mì Quảng Bà Mua - 01 Trần Quốc Toản",
       category: "Món chính"
     },
     {
       name: "Hải sản tươi sống",
       description: "Tôm hùm, cua, ghẹ, sò điệp tươi sống chế biến theo nhiều kiểu: nướng, hấp, rang me",
-      price: "200.000 - 800.000đ/kg",
+      rating: 4.6,
+      reviewCount: 189,
       location: "Các nhà hàng ven biển Non Nước",
       category: "Hải sản"
     },
     {
       name: "Bánh tráng cuốn thịt heo",
       description: "Đặc sản Đà Nẵng với thịt heo luộc, rau sống, cuốn bánh tráng chấm mắm nêm đậm đà",
-      price: "5.000 - 10.000đ/cuốn",
+      rating: 4.9,
+      reviewCount: 312,
       location: "Bánh tráng Mỹ Sơn - Đường Huỳnh Ngọc Huệ",
       category: "Ăn vặt"
     },
     {
       name: "Bún chả cá",
       description: "Bún với chả cá thơm ngon, ăn kèm rau sống, dứa, cà chua và nước mắm đặc biệt",
-      price: "25.000 - 40.000đ",
+      rating: 4.7,
+      reviewCount: 178,
       location: "Bún chả cá 69 - 69 Ngũ Hành Sơn",
       category: "Món chính"
     },
     {
       name: "Bánh xèo",
       description: "Bánh xèo giòn rụm với nhân tôm, thịt, giá đỗ, ăn kèm rau sống và nước chấm chua ngọt",
-      price: "15.000 - 30.000đ",
+      rating: 4.5,
+      reviewCount: 145,
       location: "Bánh xèo Bà Dưỡng",
       category: "Món chính"
     },
     {
       name: "Nem lụi",
       description: "Nem nướng trên than hồng thơm phức, ăn kèm bánh tráng, rau sống và nước chấm",
-      price: "5.000 - 8.000đ/que",
+      rating: 4.4,
+      reviewCount: 98,
       location: "Các quán ăn vặt gần chợ Ngũ Hành Sơn",
       category: "Ăn vặt"
     },
     {
       name: "Cơm gà Hội An",
       description: "Cơm vàng ươm thơm ngon, gà xé phay mềm, ăn kèm rau sống và nước chấm đặc trưng",
-      price: "30.000 - 50.000đ",
+      rating: 4.7,
+      reviewCount: 203,
       location: "Cơm gà Bà Nga",
       category: "Món chính"
     },
     {
       name: "Cao lầu",
       description: "Món mì đặc sản Hội An với sợi mì dày dai, thịt heo xá xíu, giá đỗ và nước dùng đậm đà",
-      price: "30.000 - 45.000đ",
+      rating: 4.6,
+      reviewCount: 167,
       location: "Các quán ven đường Ngũ Hành Sơn",
       category: "Món chính"
     }
@@ -130,8 +139,12 @@ const Food = () => {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Giá tham khảo:</span>
-                    <span className="font-bold text-primary">{dish.price}</span>
+                    <span className="text-sm text-muted-foreground">Đánh giá:</span>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-bold text-primary">{dish.rating}</span>
+                      <span className="text-sm text-muted-foreground">({dish.reviewCount} lượt)</span>
+                    </div>
                   </div>
                   <div>
                     <span className="text-sm text-muted-foreground">Địa chỉ gợi ý:</span>
