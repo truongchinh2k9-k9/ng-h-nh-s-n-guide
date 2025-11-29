@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, MapPin, UtensilsCrossed, Phone, Info, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -17,22 +16,206 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const welcomeMessage = `Xin chào! 👋 Chào mừng bạn đến với website du lịch Ngũ Hành Sơn!
 
 Đây là website được phát triển bởi nhóm 11/1 Hermann Gmeiner gồm 5 thành viên với tâm huyết là mang lại giá trị cho việc phát triển du lịch địa phương.
 
 Tôi có thể giúp bạn tìm hiểu về:
-• Giá cả món ăn & sản phẩm
-• Địa điểm tham quan
+• Địa điểm du lịch & tham quan
+• Ẩm thực địa phương
 • Khoảng cách di chuyển
+• Lịch trình gợi ý
+• Khách sạn, bãi biển
 • Thông tin liên hệ
 
 Hãy chọn chủ đề bên dưới hoặc nhập câu hỏi của bạn! 😊`;
 
   // Pre-defined responses
   const responses: Record<string, string> = {
+    // Du lịch chung
+    "du lịch": `🏝️ **DU LỊCH NGŨ HÀNH SƠN - ĐÀ NẴNG**
+
+Ngũ Hành Sơn là điểm du lịch nổi tiếng với:
+
+⛰️ **Danh thắng thiên nhiên:**
+• 5 ngọn núi: Kim, Mộc, Thủy, Hỏa, Thổ
+• Hang động kỳ vĩ: Huyền Không, Âm Phủ
+• Chùa chiền linh thiêng
+
+🏖️ **Bãi biển:**
+• Bãi biển Non Nước - Top đẹp nhất châu Á
+• Bãi biển Mỹ Khê gần kề
+
+🛍️ **Mua sắm:**
+• Làng đá mỹ nghệ Non Nước 400 năm tuổi
+
+🎫 Vé: 40.000đ/người | ⏰ 7:00-17:30
+📍 Cách trung tâm Đà Nẵng 8km`,
+
+    "tham quan": `📸 **HƯỚNG DẪN THAM QUAN NGŨ HÀNH SƠN**
+
+⏰ **Thời gian lý tưởng:** 3-4 tiếng
+🕐 **Nên đi:** 7:00-9:00 sáng (mát, ít người)
+
+📋 **Lộ trình gợi ý:**
+1. Mua vé cổng chính (40.000đ)
+2. Đi thang máy lên (40.000đ) hoặc leo 156 bậc
+3. Tham quan Động Huyền Không ⭐
+4. Viếng Chùa Linh Ứng
+5. Khám phá Động Âm Phủ
+6. Lên đỉnh ngắm toàn cảnh
+7. Xuống núi, ghé làng đá mỹ nghệ
+
+👟 **Lưu ý:** Mang giày thể thao, đội mũ, mang nước!`,
+
+    "lịch trình": `📅 **GỢI Ý LỊCH TRÌNH THAM QUAN**
+
+**🌅 NỬA NGÀY (4 tiếng):**
+7:00 - Leo núi Thủy Sơn
+8:30 - Tham quan động, chùa
+10:00 - Làng đá mỹ nghệ
+11:00 - Ăn trưa Mì Quảng
+
+**☀️ CẢ NGÀY:**
+Sáng: Ngũ Hành Sơn (như trên)
+Trưa: Hải sản Non Nước
+Chiều: Bãi biển Non Nước
+Tối: Phố cổ Hội An (7km)
+
+**🗓️ 2 NGÀY:**
+Ngày 1: Ngũ Hành Sơn + Bãi biển
+Ngày 2: Hội An + Bà Nà Hills
+
+💡 Mẹo: Đi sớm tránh nắng và đông đúc!`,
+
+    // Bãi biển
+    "biển": `🏖️ **BÃI BIỂN TẠI NGŨ HÀNH SƠN**
+
+**🌊 Bãi biển Non Nước**
+• Được Forbes bình chọn đẹp nhất hành tinh
+• Cát trắng mịn, nước trong xanh
+• Sóng vừa phải, an toàn tắm biển
+• Có dịch vụ: ghế, dù, nước uống
+📍 Cách núi Ngũ Hành Sơn 1km
+
+**🏄 Hoạt động:**
+• Tắm biển, lướt sóng
+• Chơi bóng chuyền bãi biển  
+• Ngắm hoàng hôn tuyệt đẹp
+
+**🏨 Resort gần đó:**
+• Hyatt Regency, Fusion Maia
+• Pullman, Naman Retreat
+
+⏰ Tắm biển an toàn: 5:00-7:00 & 16:00-18:00`,
+
+    "non nước": `🏖️ **BÃI BIỂN NON NƯỚC**
+
+📍 Vị trí: Phường Hòa Hải, Quận Ngũ Hành Sơn
+🏆 Được Forbes bình chọn đẹp nhất hành tinh!
+
+✨ **Đặc điểm:**
+• Bãi cát trắng mịn dài 5km
+• Nước biển trong xanh, sóng vừa
+• View núi Ngũ Hành Sơn tuyệt đẹp
+• Ít đông đúc hơn Mỹ Khê
+
+🎯 **Hoạt động:**
+• Tắm biển, lướt sóng
+• Chụp ảnh hoàng hôn
+• Thưởng thức hải sản tươi
+
+🚗 Cách trung tâm: 8km (20 phút)`,
+
+    // Khách sạn
+    "khách sạn": `🏨 **KHÁCH SẠN TẠI NGŨ HÀNH SƠN**
+
+**⭐⭐⭐⭐⭐ 5 SAO:**
+• Hyatt Regency: 3.500.000đ/đêm
+• Pullman Resort: 3.000.000đ/đêm
+• Fusion Maia: 4.000.000đ/đêm
+
+**⭐⭐⭐⭐ 4 SAO:**
+• Naman Retreat: 2.500.000đ/đêm
+• Premier Village: 2.800.000đ/đêm
+
+**⭐⭐⭐ 3 SAO & Homestay:**
+• Các homestay gần núi: 300.000-500.000đ
+• Khách sạn mini: 400.000-700.000đ
+
+💡 **Mẹo:**
+• Đặt trước 1-2 tuần để có giá tốt
+• Chọn gần biển Non Nước hoặc gần núi
+• Mùa thấp điểm (9-12): giá rẻ hơn 30%`,
+
+    "ở đâu": `🏠 **NÊN Ở ĐÂU KHI ĐẾN NGŨ HÀNH SƠN?**
+
+**📍 Khu vực gợi ý:**
+
+1️⃣ **Ven biển Non Nước** ⭐
+• Gần biển, gần núi
+• Resort cao cấp nhiều
+• View đẹp, yên tĩnh
+
+2️⃣ **Đường Lê Văn Hiến**
+• Nhiều homestay, khách sạn mini
+• Gần các quán ăn ngon
+• Giá phải chăng
+
+3️⃣ **Gần Hội An** (7km)
+• Tiện tham quan cả 2 nơi
+• Phố cổ đẹp về đêm
+
+💰 **Mức giá:**
+• Homestay: 200.000-500.000đ
+• Khách sạn 3*: 400.000-800.000đ
+• Resort 5*: 2.000.000-5.000.000đ`,
+
+    // Thời tiết
+    "thời tiết": `🌤️ **THỜI TIẾT NGŨ HÀNH SƠN - ĐÀ NẴNG**
+
+**📅 Mùa du lịch tốt nhất:**
+• Tháng 3-8: Nắng đẹp, ít mưa ⭐
+• Tháng 9-12: Mùa mưa, cẩn thận
+
+**🌡️ Nhiệt độ trung bình:**
+• Mùa hè (5-8): 28-35°C
+• Mùa đông (11-2): 20-25°C
+
+**☔ Lưu ý khi mưa:**
+• Đường lên núi trơn, cẩn thận
+• Nên mang áo mưa
+• Tránh vào hang động khi mưa lớn
+
+**👕 Nên mặc:**
+• Quần áo thoáng mát
+• Giày thể thao bám tốt
+• Đội mũ, kính râm, kem chống nắng`,
+
+    "đi khi nào": `📆 **KHI NÀO NÊN ĐI NGŨ HÀNH SƠN?**
+
+**✅ Thời điểm TỐT NHẤT:**
+• **Tháng 3-8**: Nắng đẹp, biển êm ⭐
+• **Tháng 4-5**: Thời tiết lý tưởng nhất
+
+**⚠️ Nên tránh:**
+• Tháng 10-11: Mưa bão nhiều
+• Tết Nguyên Đán: Đông đúc, giá cao
+
+**⏰ Giờ tham quan núi:**
+• Sáng sớm 7:00-9:00 (mát, ít người) ⭐
+• Chiều 15:00-17:00 (nắng dịu)
+
+**🏖️ Giờ tắm biển:**
+• Sáng: 5:00-7:00
+• Chiều: 16:00-18:00`,
+
     // Giá món ăn
     "giá": `📋 **BẢNG GIÁ MÓN ĂN THAM KHẢO:**
 
@@ -85,6 +268,27 @@ Hãy chọn chủ đề bên dưới hoặc nhập câu hỏi của bạn! 😊`
 • Chợ hải sản Non Nước
 
 ⚠️ Lưu ý: Luôn hỏi giá và yêu cầu cân trước mặt!`,
+
+    "ăn gì": `🍽️ **ĂN GÌ TẠI NGŨ HÀNH SƠN?**
+
+**🥇 Must-try (Phải thử):**
+• Mì Quảng - Món đặc trưng Đà Nẵng
+• Bánh tráng cuốn thịt heo
+• Hải sản tươi sống
+
+**🍜 Món ngon khác:**
+• Bún chả cá
+• Bánh xèo miền Trung
+• Cao lầu (đặc sản Hội An)
+• Cơm gà Hội An
+• Nem lụi
+
+**📍 Khu ẩm thực nổi tiếng:**
+• Các quán ven đường Lê Văn Hiến
+• Nhà hàng hải sản Non Nước
+• Chợ Ngũ Hành Sơn
+
+💡 Ăn tại quán đông khách địa phương = ngon + giá hợp lý!`,
 
     // Địa điểm
     "địa điểm": `📍 **CÁC ĐỊA ĐIỂM NỔI BẬT TẠI NGŨ HÀNH SƠN:**
@@ -147,7 +351,23 @@ Nằm sâu trong núi, yên tĩnh, thanh bình.
 📍 Tất cả nằm trên núi Thủy Sơn
 ⏰ Giờ thăm: 7:00 - 17:00`,
 
-    // Khoảng cách
+    "huyền không": `✨ **ĐỘNG HUYỀN KHÔNG**
+
+Đây là hang động đẹp nhất và nổi tiếng nhất tại Ngũ Hành Sơn!
+
+🌟 **Đặc điểm:**
+• Ánh sáng tự nhiên chiếu qua vòm đá tạo cảnh tượng huyền ảo
+• Có tượng Phật lớn bằng đá cẩm thạch
+• Không khí mát mẻ, linh thiêng
+
+📸 **Tips chụp ảnh:**
+• Thời điểm đẹp nhất: 10:00-12:00 (ánh sáng rọi vào)
+• Mang chân máy nếu có
+
+📍 Nằm trên núi Thủy Sơn
+🎫 Vé: Bao gồm trong vé 40.000đ`,
+
+    // Khoảng cách & Di chuyển
     "khoảng cách": `🚗 **KHOẢNG CÁCH TỪ NGŨ HÀNH SƠN:**
 
 📍 Đến **Trung tâm Đà Nẵng**: ~8km (20 phút)
@@ -160,6 +380,26 @@ Nằm sâu trong núi, yên tĩnh, thanh bình.
 
 🛵 Thuê xe máy: 100.000 - 150.000đ/ngày
 🚕 Grab/Taxi: Có sẵn, giá hợp lý`,
+
+    "di chuyển": `🚗 **CÁCH DI CHUYỂN ĐẾN NGŨ HÀNH SƠN**
+
+**Từ sân bay Đà Nẵng (10km):**
+• Grab/Taxi: 100.000-150.000đ
+• Xe bus: Tuyến 01 (15.000đ)
+
+**Từ trung tâm Đà Nẵng (8km):**
+• Grab/Taxi: 60.000-100.000đ
+• Xe bus: Tuyến 01, 06
+
+**Từ Hội An (7km):**
+• Grab/Taxi: 50.000-80.000đ
+• Xe bus: Tuyến 01
+
+**🛵 Thuê xe máy:**
+• Giá: 100.000-150.000đ/ngày
+• Thuê tại khách sạn hoặc cửa hàng
+
+💡 Gợi ý: Thuê xe máy tiện nhất để tự do khám phá!`,
 
     "hội an": `📍 **NGŨ HÀNH SƠN → HỘI AN**
 
@@ -184,6 +424,22 @@ Nằm sâu trong núi, yên tĩnh, thanh bình.
 • Xe bus: Tuyến 01, 06
 
 📍 Các điểm nổi bật ở trung tâm: Cầu Rồng, Bảo tàng Chăm, Chợ Hàn`,
+
+    "bà nà": `🏰 **NGŨ HÀNH SƠN → BÀ NÀ HILLS**
+
+🚗 Khoảng cách: ~35km
+⏱️ Thời gian: 50-60 phút
+
+💰 **Chi phí:**
+• Grab/Taxi: 300.000-400.000đ
+• Xe máy: Tự lái (đường đèo đẹp)
+• Tour: 500.000đ (bao gồm đưa đón)
+
+🎫 **Vé Bà Nà Hills:** 
+• Người lớn: 900.000đ
+• Trẻ em: 750.000đ
+
+💡 Nên đi cả ngày để tham quan đủ!`,
 
     // Liên hệ
     "liên hệ": `📞 **THÔNG TIN LIÊN HỆ:**
@@ -237,18 +493,54 @@ Nằm sâu trong núi, yên tĩnh, thanh bình.
 
 💡 Mẹo: Nên đi sáng sớm (7:00-9:00) để tránh đông và nắng nóng!`,
 
-    "đá mỹ nghệ": `🗿 **GIÁ ĐÁ MỸ NGHỆ NON NƯỚC:**
+    "đá mỹ nghệ": `🗿 **LÀNG ĐÁ MỸ NGHỆ NON NƯỚC**
 
+📍 Nằm dưới chân núi Ngũ Hành Sơn
+🕐 Lịch sử: Hơn 400 năm tuổi
+
+💰 **Giá tham khảo:**
 • Tượng Phật Di Lặc nhỏ (20cm): 150.000 - 300.000đ
 • Tượng Quan Âm trung (50cm): 1.500.000 - 3.000.000đ
 • Tượng rồng phượng cặp: 500.000 - 2.000.000đ
 • Đồ trang trí nhỏ: 50.000 - 200.000đ
 • Lư hương đá: 200.000 - 800.000đ
 
-📍 **Địa điểm mua uy tín:**
-Làng đá mỹ nghệ Non Nước - Ngũ Hành Sơn
+⚠️ **Lưu ý khi mua:**
+• So sánh giá nhiều nơi
+• Mặc cả 20-30%
+• Hỏi về vận chuyển nếu mua đồ lớn`,
 
-⚠️ Lưu ý: So sánh giá nhiều nơi, mặc cả 20-30%!`,
+    // Câu hỏi phổ biến
+    "cảm ơn": `💚 Không có gì! Rất vui được hỗ trợ bạn!
+
+Nếu bạn có thêm câu hỏi về:
+• Du lịch Ngũ Hành Sơn
+• Ẩm thực, khách sạn
+• Khoảng cách, di chuyển
+
+Đừng ngại hỏi nhé! Chúc bạn có chuyến du lịch vui vẻ! 🌴`,
+
+    "xin chào": `👋 Xin chào! Tôi là **Nui Non Guide** - trợ lý du lịch của bạn!
+
+Tôi có thể giúp bạn tìm hiểu về:
+• 🏔️ Địa điểm tham quan
+• 🍜 Ẩm thực ngon
+• 🚗 Di chuyển, khoảng cách
+• 🏨 Khách sạn, nghỉ dưỡng
+• 🎫 Giá vé, chi phí
+
+Bạn muốn biết thông tin gì? 😊`,
+
+    "hello": `👋 Hello! I'm **Nui Non Guide** - your travel assistant!
+
+I can help you with:
+• 🏔️ Tourist attractions
+• 🍜 Local cuisine
+• 🚗 Transportation
+• 🏨 Hotels & resorts
+• 🎫 Ticket prices
+
+What would you like to know? 😊`,
   };
 
   // Quick action buttons
@@ -262,7 +554,6 @@ Làng đá mỹ nghệ Non Nước - Ngũ Hành Sơn
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      // Send welcome message when chat opens
       setTimeout(() => {
         setMessages([
           {
@@ -277,20 +568,28 @@ Làng đá mỹ nghệ Non Nước - Ngũ Hành Sơn
   }, [isOpen]);
 
   useEffect(() => {
-    // Scroll to bottom when new messages arrive
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
+    scrollToBottom();
+  }, [messages, isTyping]);
 
   const findResponse = (input: string): string => {
     const lowerInput = input.toLowerCase();
     
     // Check for keywords in order of specificity
     const keywords = [
-      "mì quảng", "bánh tráng", "hải sản", "vé", "đá mỹ nghệ",
-      "núi", "động", "chùa", "hội an", "đà nẵng",
-      "giá", "địa điểm", "khoảng cách", "liên hệ", "giới thiệu"
+      // Du lịch
+      "du lịch", "tham quan", "lịch trình", "đi khi nào", "thời tiết",
+      // Bãi biển & khách sạn
+      "biển", "non nước", "khách sạn", "ở đâu",
+      // Địa điểm cụ thể
+      "huyền không", "mì quảng", "bánh tráng", "hải sản", "ăn gì",
+      "vé", "đá mỹ nghệ",
+      "núi", "động", "chùa",
+      // Khoảng cách
+      "hội an", "đà nẵng", "bà nà", "di chuyển",
+      // Chung
+      "giá", "địa điểm", "khoảng cách", "liên hệ", "giới thiệu",
+      // Chào hỏi
+      "cảm ơn", "xin chào", "hello"
     ];
 
     for (const keyword of keywords) {
@@ -300,14 +599,15 @@ Làng đá mỹ nghệ Non Nước - Ngũ Hành Sơn
     }
 
     // Default response
-    return `Xin lỗi, tôi chưa hiểu câu hỏi của bạn. 😅
+    return `Xin lỗi, tôi chưa hiểu rõ câu hỏi của bạn. 😅
 
 Bạn có thể hỏi tôi về:
-• **Giá cả**: "giá món ăn", "giá hải sản", "giá vé"
-• **Địa điểm**: "địa điểm tham quan", "núi", "chùa", "động"
-• **Di chuyển**: "khoảng cách đến Hội An", "đi Đà Nẵng"
-• **Liên hệ**: "thông tin liên hệ", "hotline"
-• **Về website**: "giới thiệu website"
+• **Du lịch**: "du lịch ngũ hành sơn", "lịch trình", "tham quan"
+• **Địa điểm**: "núi", "chùa", "động", "biển non nước"
+• **Ẩm thực**: "ăn gì", "mì quảng", "hải sản"
+• **Di chuyển**: "đi hội an", "khoảng cách", "di chuyển"
+• **Lưu trú**: "khách sạn", "ở đâu"
+• **Khác**: "giá vé", "thời tiết", "liên hệ"
 
 Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
   };
@@ -326,7 +626,6 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot typing
     setTimeout(() => {
       const botResponse: Message = {
         id: messages.length + 2,
@@ -393,7 +692,7 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
           </div>
 
           {/* Messages */}
-          <ScrollArea className="h-[350px] p-4" ref={scrollRef}>
+          <div className="h-[350px] overflow-y-auto p-4">
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -426,8 +725,9 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
-          </ScrollArea>
+          </div>
 
           {/* Quick Actions */}
           <div className="px-4 py-2 border-t border-border">
