@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Mountain } from "lucide-react";
+import { Menu, X, Mountain, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   const navItems = [
-    { path: "/", label: "Trang chủ" },
-    { path: "/about", label: "Giới thiệu" },
-    { path: "/food", label: "Ẩm thực" },
-    { path: "/map", label: "Bản đồ" },
-    { path: "/price-check", label: "Tra giá" },
-    { path: "/contact", label: "Liên hệ" },
+    { path: "/", label: t.nav.home },
+    { path: "/about", label: t.nav.about },
+    { path: "/food", label: t.nav.food },
+    { path: "/map", label: t.nav.map },
+    { path: "/price-check", label: t.nav.priceCheck },
+    { path: "/contact", label: t.nav.contact },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -41,6 +43,17 @@ const Navigation = () => {
                 </Button>
               </Link>
             ))}
+            
+            {/* Language Selector */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="ml-2 gap-1"
+              onClick={() => setLanguage(language === "vi" ? "en" : "vi")}
+            >
+              <Globe className="h-4 w-4" />
+              {language === "vi" ? "EN" : "VI"}
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -71,6 +84,16 @@ const Navigation = () => {
                   </Button>
                 </Link>
               ))}
+              
+              {/* Mobile Language Selector */}
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-2"
+                onClick={() => setLanguage(language === "vi" ? "en" : "vi")}
+              >
+                <Globe className="h-4 w-4" />
+                {language === "vi" ? "English" : "Tiếng Việt"}
+              </Button>
             </div>
           </div>
         )}
