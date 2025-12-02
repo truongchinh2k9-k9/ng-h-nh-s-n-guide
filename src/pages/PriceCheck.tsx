@@ -13,13 +13,6 @@ const PriceCheck = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const priceData = {
-    "Đá mỹ nghệ": [
-      { item: "Tượng Phật Di Lặc nhỏ (20cm)", priceRange: "150.000 - 300.000đ", avgPrice: "200.000đ" },
-      { item: "Tượng Phật Quan Âm trung (50cm)", priceRange: "1.500.000 - 3.000.000đ", avgPrice: "2.000.000đ" },
-      { item: "Tượng rồng phượng cặp", priceRange: "500.000 - 2.000.000đ", avgPrice: "1.000.000đ" },
-      { item: "Đồ trang trí bàn nhỏ", priceRange: "50.000 - 200.000đ", avgPrice: "100.000đ" },
-      { item: "Lư hương đá cẩm thạch", priceRange: "200.000 - 800.000đ", avgPrice: "400.000đ" }
-    ],
     "Quà lưu niệm": [
       { item: "Móc khóa đá nhỏ", priceRange: "20.000 - 50.000đ", avgPrice: "30.000đ" },
       { item: "Nam châm tủ lạnh", priceRange: "10.000 - 30.000đ", avgPrice: "20.000đ" },
@@ -98,7 +91,6 @@ const PriceCheck = () => {
                       <SelectValue placeholder="Chọn danh mục" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Đá mỹ nghệ">Đá mỹ nghệ</SelectItem>
                       <SelectItem value="Quà lưu niệm">Quà lưu niệm</SelectItem>
                       <SelectItem value="Hải sản">Hải sản</SelectItem>
                       <SelectItem value="Dịch vụ du lịch">Dịch vụ du lịch</SelectItem>
