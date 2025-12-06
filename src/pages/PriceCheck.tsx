@@ -14,23 +14,23 @@ const PriceCheck = () => {
 
   const priceData = {
     "Quà lưu niệm": [
-      { item: "Móc khóa đá nhỏ", priceRange: "20.000 - 50.000đ", avgPrice: "30.000đ" },
-      { item: "Nam châm tủ lạnh", priceRange: "10.000 - 30.000đ", avgPrice: "20.000đ" },
-      { item: "Tranh đá mini", priceRange: "100.000 - 300.000đ", avgPrice: "150.000đ" },
-      { item: "Bộ ấm chén sứ Bát Tràng", priceRange: "200.000 - 500.000đ", avgPrice: "300.000đ" }
+      { item: "Móc khóa đá nhỏ", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Nam châm tủ lạnh", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Tranh đá mini", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Bộ ấm chén sứ Bát Tràng", image: "/src/assets/vietnamese-food.jpg" }
     ],
     "Hải sản": [
-      { item: "Tôm hùm (1kg)", priceRange: "600.000 - 1.200.000đ", avgPrice: "800.000đ" },
-      { item: "Cua biển (1kg)", priceRange: "200.000 - 400.000đ", avgPrice: "300.000đ" },
-      { item: "Mực tươi (1kg)", priceRange: "150.000 - 250.000đ", avgPrice: "180.000đ" },
-      { item: "Sò điệp (1kg)", priceRange: "100.000 - 200.000đ", avgPrice: "150.000đ" },
-      { item: "Cá song (1kg)", priceRange: "300.000 - 600.000đ", avgPrice: "400.000đ" }
+      { item: "Tôm hùm (1kg)", image: "/src/assets/tomhum.jpg" },
+      { item: "Cua biển (1kg)", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Mực tươi (1kg)", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Sò điệp (1kg)", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Cá song (1kg)", image: "/src/assets/vietnamese-food.jpg" }
     ],
     "Dịch vụ du lịch": [
-      { item: "Vé tham quan Ngũ Hành Sơn", priceRange: "40.000đ (người lớn)", avgPrice: "40.000đ" },
-      { item: "Thang máy lên núi", priceRange: "40.000đ (1 chiều)", avgPrice: "70.000đ (cả đi và về)" },
-      { item: "Hướng dẫn viên (nửa ngày)", priceRange: "300.000 - 500.000đ", avgPrice: "400.000đ" },
-      { item: "Thuê xe máy (1 ngày)", priceRange: "100.000 - 150.000đ", avgPrice: "120.000đ" }
+      { item: "Vé tham quan Ngũ Hành Sơn", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Thang máy lên núi", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Hướng dẫn viên (nửa ngày)", image: "/src/assets/vietnamese-food.jpg" },
+      { item: "Thuê xe máy (1 ngày)", image: "/src/assets/vietnamese-food.jpg" }
     ]
   };
 
@@ -138,15 +138,12 @@ const PriceCheck = () => {
                   <div className="space-y-4">
                     {items.map((item, index) => (
                       <div key={index} className="pb-4 border-b last:border-b-0">
-                        <p className="font-semibold mb-2">{item.item}</p>
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="text-muted-foreground">Khoảng giá:</span>
-                          <span className="font-medium">{item.priceRange}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-sm mt-1">
-                          <span className="text-muted-foreground">Giá trung bình:</span>
-                          <span className="font-bold text-primary">{item.avgPrice}</span>
-                        </div>
+                        <p className="font-semibold mb-3">{item.item}</p>
+                        <img 
+                          src={item.image} 
+                          alt={item.item}
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
                       </div>
                     ))}
                   </div>

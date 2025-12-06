@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import mapHero from "@/assets/bando.jpg";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +26,12 @@ const Map = () => {
       <Navigation />
       
       {/* Header */}
-      <section className="bg-gradient-hero text-primary-foreground py-20">
+      <section
+        className="text-primary-foreground py-20 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.35)), url(${mapHero})`,
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <MapPin className="h-16 w-16 mx-auto mb-6 animate-float" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">

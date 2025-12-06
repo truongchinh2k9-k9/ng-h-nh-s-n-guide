@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Utensils, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import foodHero from "@/assets/banhmi.jpg";
 
 const Food = () => {
   const dishes = [
@@ -12,7 +13,7 @@ const Food = () => {
       description: "Món mì đặc trưng của Quảng Nam - Đà Nẵng với nước dùng đậm đà, thịt heo, tôm, trứng và rau thơm",
       rating: 4.8,
       reviewCount: 256,
-      location: "Mì Quảng Bà Mua - 01 Trần Quốc Toản",
+      location: "Mì Quảng Bà Minh - 05 Hải Triều ",
       category: "Món chính"
     },
     {
@@ -28,7 +29,7 @@ const Food = () => {
       description: "Đặc sản Đà Nẵng với thịt heo luộc, rau sống, cuốn bánh tráng chấm mắm nêm đậm đà",
       rating: 4.9,
       reviewCount: 312,
-      location: "Bánh tráng Mỹ Sơn - Đường Huỳnh Ngọc Huệ",
+      location: "Bánh tráng thịt heo Bà Thu - 103 Đỗ Bá",
       category: "Ăn vặt"
     },
     {
@@ -44,7 +45,7 @@ const Food = () => {
       description: "Bánh xèo giòn rụm với nhân tôm, thịt, giá đỗ, ăn kèm rau sống và nước chấm chua ngọt",
       rating: 4.5,
       reviewCount: 145,
-      location: "Bánh xèo Bà Dưỡng",
+      location: "Bánh xèo 76 - 85A Lê Văn Hưu",
       category: "Món chính"
     },
     {
@@ -60,7 +61,7 @@ const Food = () => {
       description: "Cơm vàng ươm thơm ngon, gà xé phay mềm, ăn kèm rau sống và nước chấm đặc trưng",
       rating: 4.7,
       reviewCount: 203,
-      location: "Cơm gà Bà Nga",
+      location: "Cơm gia đình - 11 Phan Tôn",
       category: "Món chính"
     },
     {
@@ -80,7 +81,12 @@ const Food = () => {
       <Navigation />
       
       {/* Header */}
-      <section className="bg-gradient-hero text-primary-foreground py-20">
+      <section
+        className="text-primary-foreground py-20 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.35)), url(${foodHero})`,
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <Utensils className="h-16 w-16 mx-auto mb-6 animate-float" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">

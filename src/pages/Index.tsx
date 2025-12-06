@@ -3,10 +3,12 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mountain, Utensils, Map as MapIcon, DollarSign, Cloud, Calendar } from "lucide-react";
+import WeatherCard from "@/components/WeatherCard";
+import ItineraryCard from "@/components/ItineraryCard";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-ngu-hanh-son.jpg";
-import marbleCraft from "@/assets/marble-craft.jpg";
-import foodImage from "@/assets/vietnamese-food.jpg";
+import marbleCraft from "@/assets/langda.jpg";
+import foodImage from "@/assets/doan.jpg";
 
 const Index = () => {
   return (
@@ -120,35 +122,9 @@ const Index = () => {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="shadow-card">
-              <CardHeader>
-                <Cloud className="h-10 w-10 text-primary mb-2" />
-                <CardTitle className="text-2xl">Thời tiết</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Xem dự báo thời tiết để lên kế hoạch chuyến đi tốt nhất
-                </p>
-                <Button variant="outline" className="w-full">
-                  Xem thời tiết 7 ngày
-                </Button>
-              </CardContent>
-            </Card>
+            <WeatherCard />
 
-            <Card className="shadow-card">
-              <CardHeader>
-                <Calendar className="h-10 w-10 text-secondary mb-2" />
-                <CardTitle className="text-2xl">Gợi ý lịch trình</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Lịch trình tham quan theo nhu cầu và thời gian của bạn
-                </p>
-                <Button variant="outline" className="w-full">
-                  Xem gợi ý lịch trình
-                </Button>
-              </CardContent>
-            </Card>
+            <ItineraryCard />
           </div>
         </div>
       </section>
