@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Search, AlertCircle } from "lucide-react";
+import priceHero from "@/assets/5ngonnuii.jpg";
 
 const PriceCheck = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -14,23 +15,22 @@ const PriceCheck = () => {
 
   const priceData = {
     "Quà lưu niệm": [
-      { item: "Móc khóa đá nhỏ", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Nam châm tủ lạnh", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Tranh đá mini", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Bộ ấm chén sứ Bát Tràng", image: "/src/assets/vietnamese-food.jpg" }
+      { item: "Móc khóa đá nhỏ", image: "/src/assets/mockhoadanhoo.jpg" },
+      { item: "Tranh đá mini", image: "/src/assets/tranhda1.jpg" },
+      { item: "Bộ ấm chén sứ ", image: "/src/assets/amtra.jpg" }
     ],
     "Hải sản": [
       { item: "Tôm hùm (1kg)", image: "/src/assets/tomhum.jpg" },
-      { item: "Cua biển (1kg)", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Mực tươi (1kg)", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Sò điệp (1kg)", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Cá song (1kg)", image: "/src/assets/vietnamese-food.jpg" }
+      { item: "Cua biển (1kg)", image: "/src/assets/cua.jpg" },
+      { item: "Mực tươi (1kg)", image: "/src/assets/anhmuc.jpg" },
+      { item: "Sò điệp (1kg)", image: "/src/assets/sodiep.jpg" },
+      { item: "Cá song (1kg)", image: "/src/assets/casong.jpg" }
     ],
     "Dịch vụ du lịch": [
-      { item: "Vé tham quan Ngũ Hành Sơn", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Thang máy lên núi", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Hướng dẫn viên (nửa ngày)", image: "/src/assets/vietnamese-food.jpg" },
-      { item: "Thuê xe máy (1 ngày)", image: "/src/assets/vietnamese-food.jpg" }
+      { item: "Vé tham quan Ngũ Hành Sơn", image: "/src/assets/ve.jpg" },
+      { item: "Thang máy lên núi", image: "/src/assets/thangmay.jpg" },
+      { item: "Hướng dẫn viên (nửa ngày)", image: "/src/assets/anh1.jpg" },
+      { item: "Thuê xe máy (1 ngày)", image: "/src/assets/giuxe.jpg" }
     ]
   };
 
@@ -60,7 +60,12 @@ const PriceCheck = () => {
       <Navigation />
       
       {/* Header */}
-      <section className="bg-gradient-hero text-primary-foreground py-20">
+      <section
+        className="text-primary-foreground py-20 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.35)), url(${priceHero})`,
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <DollarSign className="h-16 w-16 mx-auto mb-6 animate-float" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">

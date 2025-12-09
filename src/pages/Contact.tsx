@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { toast } from "sonner";
+import contactHero from "@/assets/anhlienhe.jpg";
 
 const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
@@ -18,7 +19,12 @@ const Contact = () => {
       <Navigation />
       
       {/* Header */}
-      <section className="bg-gradient-hero text-primary-foreground py-20">
+      <section
+        className="text-primary-foreground py-20 bg-cover bg-center"
+        style={{
+          backgroundImage: `linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.35)), url(${contactHero})`,
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Liên hệ với chúng tôi

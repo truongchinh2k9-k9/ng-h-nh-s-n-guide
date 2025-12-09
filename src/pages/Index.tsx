@@ -107,7 +107,7 @@ const Index = () => {
               <Link to="/price-check">
                 <CardHeader>
                   <DollarSign className="h-12 w-12 text-accent mb-2" />
-                  <CardTitle>Tra giá</CardTitle>
+                  <CardTitle>đánh giá</CardTitle>
                   <CardDescription>
                     Kiểm tra giá đá mỹ nghệ và sản phẩm
                   </CardDescription>
