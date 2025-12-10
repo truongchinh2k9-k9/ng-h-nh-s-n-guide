@@ -19,7 +19,7 @@ const Footer = () => {
           <div>
             <h3 className="font-bold mb-4 text-lg">Liên kết</h3>
             <ul className="space-y-2 text-primary-foreground/80">
-              <li><Link to="/about" className="hover:text-primary-foreground transition-colors">Giới thiệu</Link></li>
+              <li><Link to="/about#non-nuoc" className="hover:text-primary-foreground transition-colors">Giới thiệu</Link></li>
               <li><Link to="/food" className="hover:text-primary-foreground transition-colors">Ẩm thực</Link></li>
               <li><Link to="/map" className="hover:text-primary-foreground transition-colors">Bản đồ</Link></li>
               <li><Link to="/price-check" className="hover:text-primary-foreground transition-colors">Tra giá</Link></li>

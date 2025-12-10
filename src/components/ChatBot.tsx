@@ -612,7 +612,7 @@ Bạn có thể hỏi tôi về:
 Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
@@ -626,16 +626,32 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
     setInputValue("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: messages.length + 2,
-        text: findResponse(inputValue),
-        isBot: true,
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, botResponse]);
-      setIsTyping(false);
-    }, 1000);
+    // Try to get a dynamic reply from the Gemini backend proxy
+    let replyText: string | null = null;
+    try {
+      // fetchGeminiReply is defined above
+      // it calls POST /api/gemini with { prompt }
+      replyText = await fetchGeminiReply(userMessage.text);
+    } catch (err) {
+      console.error("Error fetching Gemini reply:", err);
+      replyText = null;
+    }
+
+    // Fallback to local static responses if backend fails or returns nothing
+    if (!replyText) {
+      replyText = findResponse(userMessage.text);
+    }
+
+    const botResponse: Message = {
+      id: messages.length + 2,
+      text: replyText,
+      isBot: true,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, botResponse]);
+    setIsTyping(false);
+    scrollToBottom();
   };
 
   const handleQuickAction = (keyword: string) => {
@@ -772,5 +788,28 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
     </>
   );
 };
+
+  // Call backend proxy that connects to Gemini (or other LLM).
+  // Backend should expose POST /api/gemini with JSON { prompt }
+  // and return JSON { text }.
+  // This keeps API keys off the client.
+  async function fetchGeminiReply(prompt: string) {
+    try {
+      const res = await fetch("http://localhost:3001/api/gemini ", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+      const data = await res.json();
+      // Expect { text: string }
+      return data?.text ?? null;
+    } catch (err) {
+      console.error("Gemini fetch error", err);
+      return null;
+    }
+  }
 
 export default ChatBot;

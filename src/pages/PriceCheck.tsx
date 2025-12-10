@@ -17,7 +17,9 @@ const PriceCheck = () => {
     "Quà lưu niệm": [
       { item: "Móc khóa đá nhỏ", image: "/src/assets/mockhoadanhoo.jpg" },
       { item: "Tranh đá mini", image: "/src/assets/tranhda1.jpg" },
-      { item: "Bộ ấm chén sứ ", image: "/src/assets/amtra.jpg" }
+      { item: "Bộ ấm chén sứ ", image: "/src/assets/amtra.jpg" },
+      { item: "Tượng Phật đá", image: "/src/assets/phat.jpg" },
+      { item: "Đèn đá phong thủy", image: "/src/assets/den.jpg" }
     ],
     "Hải sản": [
       { item: "Tôm hùm (1kg)", image: "/src/assets/tomhum.jpg" },
@@ -78,7 +80,7 @@ const PriceCheck = () => {
       </section>
 
       {/* Search Tool */}
-      <section className="py-16 bg-background">
+      <section id="price-search" className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <Card className="max-w-4xl mx-auto shadow-card">
             <CardHeader>

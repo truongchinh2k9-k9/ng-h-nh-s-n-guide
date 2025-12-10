@@ -99,7 +99,7 @@ const Food = () => {
       </section>
 
       {/* Introduction */}
-      <section className="py-12 bg-background">
+      <section id="food-intro" className="py-12 bg-background">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-lg text-muted-foreground leading-relaxed">

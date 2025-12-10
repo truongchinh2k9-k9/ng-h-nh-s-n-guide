@@ -7,6 +7,12 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* Enable smooth scrolling for anchor navigation
+     This works for same-document anchor links and complements the ScrollManager
+     that handles route/hash changes. */
+  html {
+    scroll-behavior: smooth;
+  }
   :root {
     --background: 40 20% 97%;
     --foreground: 200 20% 15%;

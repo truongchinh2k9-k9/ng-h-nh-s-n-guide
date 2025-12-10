@@ -79,7 +79,7 @@ const About = () => {
       </section>
 
       {/* Five Mountains */}
-      <section className="py-16 bg-muted">
+      <section className="py-16 bg-muted" id="five-mountain">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-12 text-center">Năm ngọn núi linh thiêng</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -143,7 +143,7 @@ const About = () => {
       </section>
 
       {/* Non Nuoc Village */}
-      <section className="py-16 bg-ocean text-primary-foreground">
+      <section id="non-nuoc" className="py-16 bg-ocean text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Làng nghề đá mỹ nghệ Non Nước</h2>

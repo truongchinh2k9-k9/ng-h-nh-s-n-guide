@@ -68,7 +68,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/about">
+              <Link to="/about#five-mountain">
                 <CardHeader>
                   <Mountain className="h-12 w-12 text-primary mb-2" />
                   <CardTitle>Giới thiệu</CardTitle>
@@ -80,7 +80,7 @@ const Index = () => {
             </Card>
 
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/food">
+              <Link to="/food#food-intro">
                 <CardHeader>
                   <Utensils className="h-12 w-12 text-secondary mb-2" />
                   <CardTitle>Ẩm thực</CardTitle>
@@ -104,7 +104,7 @@ const Index = () => {
             </Card>
 
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/price-check">
+              <Link to="/price-check#price-search">
                 <CardHeader>
                   <DollarSign className="h-12 w-12 text-accent mb-2" />
                   <CardTitle>đánh giá</CardTitle>
@@ -145,7 +145,7 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link to="/about">
+                <Link to="/about#non-nuoc">
                   <Button>Tìm hiểu thêm</Button>
                 </Link>
               </CardContent>
@@ -160,7 +160,7 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link to="/food">
+                <Link to="/food#food-intro">
                   <Button>Khám phá món ăn</Button>
                 </Link>
               </CardContent>

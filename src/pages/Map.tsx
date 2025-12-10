@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import mapHero from "@/assets/bando.jpg";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -7,11 +7,7 @@ import { MapPin } from "lucide-react";
 
 const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Google Maps will be loaded here
-    // For now, we'll use an iframe embed as a simple solution
-  }, []);
+  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const locations = [
     { name: "Chùa Linh Ứng", type: "Điểm tham quan", lat: 16.0018, lng: 108.2655 },
@@ -20,6 +16,21 @@ const Map = () => {
     { name: "Bãi biển Non Nước", type: "Vui chơi", lat: 15.9980, lng: 108.2700 },
     { name: "Mì Quảng Bà Mua", type: "Ăn uống", lat: 16.0010, lng: 108.2640 },
   ];
+
+  // Function to generate Google Maps embed URL centered on a location
+  const generateMapUrl = (lat: number, lng: number) => {
+    const mapParams = new URLSearchParams();
+    mapParams.set("pb", `!1m18!1m12!1m3!1d1000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2s${lat},${lng}!5e0!3m2!1sen!2s!4v1234567890123`);
+    return `https://www.google.com/maps/embed?${mapParams.toString()}`;
+  };
+
+  const handleLocationClick = (location: { lat: number; lng: number }) => {
+    setSelectedLocation(location);
+  };
+
+  const currentMapUrl = selectedLocation
+    ? generateMapUrl(selectedLocation.lat, selectedLocation.lng)
+    : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3835.8563803935565!2d108.26283731533468!3d16.002131888893904!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219c2f81fa52f%3A0x923a34c135b65a00!2sMarble%20Mountains!5e0!3m2!1sen!2s!4v1234567890123";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,7 +55,7 @@ const Map = () => {
       </section>
 
       {/* Map Section */}
-      <section className="py-16 bg-background">
+      <section id="map-locations" className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Map */}
@@ -53,7 +64,8 @@ const Map = () => {
                 <CardContent className="p-0">
                   <div ref={mapRef} className="w-full h-[600px]">
                     <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3835.8563803935565!2d108.26283731533468!3d16.002131888893904!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x314219c2f81fa52f%3A0x923a34c135b65a00!2sMarble%20Mountains!5e0!3m2!1sen!2s!4v1234567890123"
+                      key={selectedLocation ? `${selectedLocation.lat}-${selectedLocation.lng}` : "default"}
+                      src={currentMapUrl}
                       width="100%"
                       height="600"
                       style={{ border: 0 }}
@@ -77,13 +89,18 @@ const Map = () => {
                   {locations.map((location, index) => (
                     <div 
                       key={index}
-                      className="p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors cursor-pointer"
+                      onClick={() => handleLocationClick(location)}
+                      className={`p-3 rounded-lg transition-colors cursor-pointer ${
+                        selectedLocation?.lat === location.lat && selectedLocation?.lng === location.lng
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted hover:bg-muted/80"
+                      }`}
                     >
                       <div className="flex items-start gap-3">
-                        <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                        <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-semibold">{location.name}</p>
-                          <p className="text-sm text-muted-foreground">{location.type}</p>
+                          <p className="text-sm opacity-80">{location.type}</p>
                         </div>
                       </div>
                     </div>
