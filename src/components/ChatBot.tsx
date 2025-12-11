@@ -1,8 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, MapPin, UtensilsCrossed, Phone, Info, Navigation } from "lucide-react";
+import {
+  MessageCircle,
+  X,
+  Send,
+  MapPin,
+  UtensilsCrossed,
+  Phone,
+  Info,
+  Navigation,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { ChatMemory } from "@/hooks/chatContext";
 
 interface Message {
   id: number;
@@ -95,7 +105,7 @@ Ngày 2: Hội An + Bà Nà Hills
 💡 Mẹo: Đi sớm tránh nắng và đông đúc!`,
 
     // Bãi biển
-    "biển": `🏖️ **BÃI BIỂN TẠI NGŨ HÀNH SƠN**
+    biển: `🏖️ **BÃI BIỂN TẠI NGŨ HÀNH SƠN**
 
 **🌊 Bãi biển Non Nước**
 • Được Forbes bình chọn đẹp nhất hành tinh
@@ -217,7 +227,7 @@ Ngày 2: Hội An + Bà Nà Hills
 • Chiều: 16:00-18:00`,
 
     // Giá món ăn
-    "giá": `📋 **BẢNG GIÁ MÓN ĂN THAM KHẢO:**
+    giá: `📋 **BẢNG GIÁ MÓN ĂN THAM KHẢO:**
 
 🍜 **Mì Quảng**: 35.000 - 50.000đ
 📍 Quán Bà Mua, Quán 1A
@@ -310,7 +320,7 @@ Ngày 2: Hội An + Bà Nà Hills
 🍴 **Ẩm thực:**
 • Quán Bà Mua, Nhà hàng Trần, Quán Bé Mặn`,
 
-    "núi": `⛰️ **NGŨ HÀNH SƠN - 5 NGỌN NÚI:**
+    núi: `⛰️ **NGŨ HÀNH SƠN - 5 NGỌN NÚI:**
 
 1. **Kim Sơn** (phía Tây Bắc) - Núi nhỏ nhất
 2. **Mộc Sơn** (phía Đông) - Cây cối xanh tươi  
@@ -323,7 +333,7 @@ Ngày 2: Hội An + Bà Nà Hills
 
 📍 Địa chỉ: Phường Hòa Hải, Quận Ngũ Hành Sơn, Đà Nẵng`,
 
-    "động": `🕳️ **CÁC HANG ĐỘNG NỔI TIẾNG:**
+    động: `🕳️ **CÁC HANG ĐỘNG NỔI TIẾNG:**
 
 ✨ **Động Huyền Không**
 Hang động đẹp nhất với ánh sáng tự nhiên chiếu qua vòm đá. Có tượng Phật lớn bên trong.
@@ -337,7 +347,7 @@ Hang động nhỏ với vách đá độc đáo.
 ⏰ Giờ mở cửa: 7:00 - 17:30 hàng ngày
 🎫 Vé: Đã bao gồm trong vé tham quan núi`,
 
-    "chùa": `🛕 **CÁC NGÔI CHÙA TẠI NGŨ HÀNH SƠN:**
+    chùa: `🛕 **CÁC NGÔI CHÙA TẠI NGŨ HÀNH SƠN:**
 
 🙏 **Chùa Linh Ứng** (Thủy Sơn)
 Ngôi chùa cổ nhất, linh thiêng, có tượng Phật lớn.
@@ -478,7 +488,7 @@ Nằm sâu trong núi, yên tĩnh, thanh bình.
 
 💚 Cảm ơn bạn đã sử dụng website của chúng tôi!`,
 
-    "vé": `🎫 **GIÁ VÉ THAM QUAN NGŨ HÀNH SƠN:**
+    vé: `🎫 **GIÁ VÉ THAM QUAN NGŨ HÀNH SƠN:**
 
 🏔️ **Vé vào cổng núi Thủy Sơn:**
 • Người lớn: 40.000đ
@@ -531,7 +541,7 @@ Tôi có thể giúp bạn tìm hiểu về:
 
 Bạn muốn biết thông tin gì? 😊`,
 
-    "hello": `👋 Hello! I'm **Nui Non Guide** - your travel assistant!
+    hello: `👋 Hello! I'm **Nui Non Guide** - your travel assistant!
 
 I can help you with:
 • 🏔️ Tourist attractions
@@ -573,23 +583,46 @@ What would you like to know? 😊`,
 
   const findResponse = (input: string): string => {
     const lowerInput = input.toLowerCase();
-    
+
     // Check for keywords in order of specificity
     const keywords = [
       // Du lịch
-      "du lịch", "tham quan", "lịch trình", "đi khi nào", "thời tiết",
+      "du lịch",
+      "tham quan",
+      "lịch trình",
+      "đi khi nào",
+      "thời tiết",
       // Bãi biển & khách sạn
-      "biển", "non nước", "khách sạn", "ở đâu",
+      "biển",
+      "non nước",
+      "khách sạn",
+      "ở đâu",
       // Địa điểm cụ thể
-      "huyền không", "mì quảng", "bánh tráng", "hải sản", "ăn gì",
-      "vé", "đá mỹ nghệ",
-      "núi", "động", "chùa",
+      "huyền không",
+      "mì quảng",
+      "bánh tráng",
+      "hải sản",
+      "ăn gì",
+      "vé",
+      "đá mỹ nghệ",
+      "núi",
+      "động",
+      "chùa",
       // Khoảng cách
-      "hội an", "đà nẵng", "bà nà", "di chuyển",
+      "hội an",
+      "đà nẵng",
+      "bà nà",
+      "di chuyển",
       // Chung
-      "giá", "địa điểm", "khoảng cách", "liên hệ", "giới thiệu",
+      "giá",
+      "địa điểm",
+      "khoảng cách",
+      "liên hệ",
+      "giới thiệu",
       // Chào hỏi
-      "cảm ơn", "xin chào", "hello"
+      "cảm ơn",
+      "xin chào",
+      "hello",
     ];
 
     for (const keyword of keywords) {
@@ -688,7 +721,11 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
           isOpen && "rotate-90"
         )}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {isOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <MessageCircle className="h-6 w-6" />
+        )}
       </button>
 
       {/* Chat Window */}
@@ -778,7 +815,11 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
                 placeholder="Nhập câu hỏi của bạn..."
                 className="flex-1 rounded-full"
               />
-              <Button type="submit" size="icon" className="rounded-full shrink-0">
+              <Button
+                type="submit"
+                size="icon"
+                className="rounded-full shrink-0"
+              >
                 <Send className="h-4 w-4" />
               </Button>
             </form>
@@ -789,27 +830,74 @@ Hoặc chọn các nút bên dưới để tìm hiểu nhanh! 👇`;
   );
 };
 
-  // Call backend proxy that connects to Gemini (or other LLM).
-  // Backend should expose POST /api/gemini with JSON { prompt }
-  // and return JSON { text }.
-  // This keeps API keys off the client.
-  async function fetchGeminiReply(prompt: string) {
-    try {
-      const res = await fetch("http://localhost:3001/api/gemini ", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-      });
+// Call backend proxy that connects to Gemini (or other LLM).
+// Backend should expose POST /api/gemini with JSON { prompt }
+// and return JSON { text }.
+// This keeps API keys off the client.
 
-      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+const API_KEY = "AIzaSyBdN0x33BwDM_D-V1TBspEvXiyPYA6p-r4";
 
-      const data = await res.json();
-      // Expect { text: string }
-      return data?.text ?? null;
-    } catch (err) {
-      console.error("Gemini fetch error", err);
-      return null;
+const MODELS = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-pro"];
+
+async function fetchGeminiReply(prompt: string, retry = 3) {
+  // --- Thêm vào bộ nhớ trước khi gửi lên ---
+  ChatMemory.addUser(prompt);
+
+  // --- System Prompt (giả lập “huấn luyện”) ---
+  const systemInstruction = {
+    role: "user",
+    parts: [
+      {
+        text: "Bạn là trợ lý AI trò chuyện lịch sự, trả lời ngắn gọn, chính xác.",
+      },
+    ],
+  };
+
+  // --- Chuyển lịch sử thành dạng mà Gemini cần ---
+  const conversationParts = ChatMemory.history.map((item) => ({
+    role: item.role,
+    parts: [{ text: item.text }],
+  }));
+
+  const fullContent = [systemInstruction, ...conversationParts];
+
+  for (const model of MODELS) {
+    for (let i = 0; i < retry; i++) {
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: fullContent,
+            }),
+          }
+        );
+
+        if (res.status === 503) {
+          await new Promise((r) => setTimeout(r, 1500));
+          continue;
+        }
+
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+
+        if (text) {
+          ChatMemory.addModel(text);
+          return text;
+        }
+
+        throw new Error("Empty response");
+      } catch (err) {
+        await new Promise((r) => setTimeout(r, 1500));
+      }
     }
   }
+
+  return "⚠️ Tất cả model đều quá tải.";
+}
 
 export default ChatBot;
