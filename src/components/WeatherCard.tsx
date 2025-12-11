@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Cloud, Sun, CloudRain, CloudSnow, Zap, Wind } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   latitude?: number;
@@ -10,28 +11,6 @@ type Props = {
 };
 
 const TTL = 1000 * 60 * 15; // 15 minutes
-
-function weatherCodeToText(code: number) {
-  const map: Record<number, string> = {
-    0: "Trời quang đãng",
-    1: "Ít mây",
-    2: "Có mây",
-    3: "Trời nhiều mây",
-    45: "Sương mù",
-    48: "Sương đóng băng",
-    51: "Mưa phùn nhẹ",
-    53: "Mưa phùn",
-    55: "Mưa phùn dày",
-    61: "Mưa nhẹ",
-    63: "Mưa vừa",
-    65: "Mưa to",
-    71: "Tuyết nhẹ",
-    73: "Tuyết vừa",
-    75: "Tuyết to",
-    95: "Dông",
-  };
-  return map[code] ?? "Thời tiết thay đổi";
-}
 
 function weatherCodeToIcon(code: number) {
   if (code === 0) return Sun;
@@ -43,12 +22,17 @@ function weatherCodeToIcon(code: number) {
 }
 
 export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, timezone = "Asia/Ho_Chi_Minh" }: Props) {
+  const { t, language } = useLanguage();
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [unit, setUnit] = useState<"C" | "F">("C");
 
   const cacheKey = `weather_${latitude}_${longitude}`;
+
+  const weatherCodeToText = (code: number) => {
+    return t.weather.conditions[code] ?? (language === "vi" ? "Thời tiết thay đổi" : language === "en" ? "Changing weather" : "날씨 변화");
+  };
 
   useEffect(() => {
     const cached = localStorage.getItem(cacheKey);
@@ -84,7 +68,7 @@ export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, 
       })
       .catch((err) => {
         if (cancelled) return;
-        setError(err.message || "Lỗi khi tải dữ liệu thời tiết");
+        setError(err.message || t.common.error);
         setLoading(false);
       });
 
@@ -97,31 +81,33 @@ export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, 
     return Math.round((c * 9) / 5 + 32);
   }
 
+  const dateLocale = language === "vi" ? "vi-VN" : language === "ko" ? "ko-KR" : "en-US";
+
   return (
     <Card className="shadow-card">
       <CardHeader>
         <div className="flex items-center gap-3">
           <Cloud className="h-8 w-8 text-primary" />
-          <CardTitle>Thời tiết</CardTitle>
+          <CardTitle>{t.weather.title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
-        {loading && <div className="text-muted-foreground">Đang tải dữ liệu thời tiết…</div>}
+        {loading && <div className="text-muted-foreground">{t.weather.loading}</div>}
         {error && <div className="text-destructive">{error}</div>}
 
         {data && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-muted-foreground">Ngũ Hành Sơn</div>
+                <div className="text-sm text-muted-foreground">{t.weather.location}</div>
                 <div className="text-3xl font-bold">
                   {unit === "C" ? Math.round(data.current_weather.temperature) : cToF(data.current_weather.temperature)}°{unit}
                 </div>
-                <div className="text-sm text-muted-foreground">Gió: {data.current_weather.windspeed} km/h</div>
+                <div className="text-sm text-muted-foreground">{t.weather.wind}: {data.current_weather.windspeed} km/h</div>
               </div>
 
               <div className="text-right">
-                <div className="text-sm text-muted-foreground">Trạng thái</div>
+                <div className="text-sm text-muted-foreground">{t.weather.status}</div>
                 <div className="font-medium flex items-center gap-2 justify-end">
                   {(() => {
                     const Icon = weatherCodeToIcon(data.current_weather.weathercode);
@@ -138,7 +124,7 @@ export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, 
             </div>
 
             <div>
-              <div className="text-sm text-muted-foreground mb-2">Dự báo 7 ngày</div>
+              <div className="text-sm text-muted-foreground mb-2">{t.weather.forecast}</div>
               <div className="grid grid-cols-1 gap-2">
                 {data.daily.time.map((d: string, i: number) => (
                   <div key={d} className="flex items-center justify-between p-2 bg-muted rounded">
@@ -148,14 +134,14 @@ export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, 
                         return <Icon className="h-5 w-5" />;
                       })()}
                       <div className="text-sm">
-                        {new Date(d).toLocaleDateString("vi-VN", { weekday: "short", day: "numeric" })}
+                        {new Date(d).toLocaleDateString(dateLocale, { weekday: "short", day: "numeric" })}
                         <div className="text-xs text-muted-foreground">{weatherCodeToText(data.daily.weathercode[i])}</div>
                       </div>
                     </div>
 
                     <div className="text-sm font-medium text-right">
                       {unit === "C" ? Math.round(data.daily.temperature_2m_max[i]) : cToF(data.daily.temperature_2m_max[i])}° / {unit === "C" ? Math.round(data.daily.temperature_2m_min[i]) : cToF(data.daily.temperature_2m_min[i])}°
-                      <div className="text-xs text-muted-foreground">Mưa: {data.daily.precipitation_sum[i]} mm</div>
+                      <div className="text-xs text-muted-foreground">{t.weather.rain}: {data.daily.precipitation_sum[i]} mm</div>
                     </div>
                   </div>
                 ))}
