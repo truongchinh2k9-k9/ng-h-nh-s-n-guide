@@ -2,7 +2,19 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Mountain, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
+
+const languageOptions: { code: Language; label: string; flag: string }[] = [
+  { code: "vi", label: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "en", label: "English", flag: "🇺🇸" },
+  { code: "ko", label: "한국어", flag: "🇰🇷" },
+];
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +31,8 @@ const Navigation = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const currentLang = languageOptions.find((l) => l.code === language);
 
   return (
     <nav className="bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-soft">
@@ -44,16 +58,28 @@ const Navigation = () => {
               </Link>
             ))}
             
-            {/* Language Selector */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="ml-2 gap-1"
-              onClick={() => setLanguage(language === "vi" ? "en" : "vi")}
-            >
-              <Globe className="h-4 w-4" />
-              {language === "vi" ? "EN" : "VI"}
-            </Button>
+            {/* Language Selector Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="ml-2 gap-2">
+                  <Globe className="h-4 w-4" />
+                  <span>{currentLang?.flag}</span>
+                  <span className="hidden lg:inline">{currentLang?.label}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {languageOptions.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={language === lang.code ? "bg-accent" : ""}
+                  >
+                    <span className="mr-2">{lang.flag}</span>
+                    {lang.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Mobile Menu Button */}
@@ -86,14 +112,26 @@ const Navigation = () => {
               ))}
               
               {/* Mobile Language Selector */}
-              <Button
-                variant="outline"
-                className="w-full justify-start gap-2"
-                onClick={() => setLanguage(language === "vi" ? "en" : "vi")}
-              >
-                <Globe className="h-4 w-4" />
-                {language === "vi" ? "English" : "Tiếng Việt"}
-              </Button>
+              <div className="border-t border-border pt-2 mt-2">
+                <p className="text-sm text-muted-foreground px-4 py-2">
+                  <Globe className="h-4 w-4 inline mr-2" />
+                  {language === "vi" ? "Ngôn ngữ" : language === "en" ? "Language" : "언어"}
+                </p>
+                {languageOptions.map((lang) => (
+                  <Button
+                    key={lang.code}
+                    variant={language === lang.code ? "secondary" : "ghost"}
+                    className="w-full justify-start gap-2"
+                    onClick={() => {
+                      setLanguage(lang.code);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <span>{lang.flag}</span>
+                    {lang.label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         )}
