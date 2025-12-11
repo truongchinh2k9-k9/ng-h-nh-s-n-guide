@@ -7,52 +7,63 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, Search, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import priceHero from "@/assets/5ngonnuii.jpg";
 
 const PriceCheck = () => {
+  const { t, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const priceData = {
-    "Quà lưu niệm": [
-      { item: "Móc khóa đá nhỏ", image: "/src/assets/mockhoadanhoo.jpg" },
-      { item: "Tranh đá mini", image: "/src/assets/tranhda1.jpg" },
-      { item: "Bộ ấm chén sứ ", image: "/src/assets/amtra.jpg" },
-      { item: "Tượng Phật đá", image: "/src/assets/phat.jpg" },
-      { item: "Đèn đá phong thủy", image: "/src/assets/den.jpg" }
-    ],
-    "Hải sản": [
-      { item: "Tôm hùm (1kg)", image: "/src/assets/tomhum.jpg" },
-      { item: "Cua biển (1kg)", image: "/src/assets/cua.jpg" },
-      { item: "Mực tươi (1kg)", image: "/src/assets/anhmuc.jpg" },
-      { item: "Sò điệp (1kg)", image: "/src/assets/sodiep.jpg" },
-      { item: "Cá song (1kg)", image: "/src/assets/casong.jpg" }
-    ],
-    "Dịch vụ du lịch": [
-      { item: "Vé tham quan Ngũ Hành Sơn", image: "/src/assets/ve.jpg" },
-      { item: "Thang máy lên núi", image: "/src/assets/thangmay.jpg" },
-      { item: "Hướng dẫn viên (nửa ngày)", image: "/src/assets/anh1.jpg" },
-      { item: "Thuê xe máy (1 ngày)", image: "/src/assets/giuxe.jpg" }
-    ]
+    souvenirs: {
+      label: t.priceCheck.categories.souvenirs,
+      items: [
+        { item: { vi: "Móc khóa đá nhỏ", en: "Small stone keychain", ko: "작은 돌 열쇠고리" }, image: "/src/assets/mockhoadanhoo.jpg" },
+        { item: { vi: "Tranh đá mini", en: "Mini stone painting", ko: "미니 돌 그림" }, image: "/src/assets/tranhda1.jpg" },
+        { item: { vi: "Bộ ấm chén sứ", en: "Ceramic tea set", ko: "도자기 찻잔 세트" }, image: "/src/assets/amtra.jpg" },
+        { item: { vi: "Tượng Phật đá", en: "Stone Buddha statue", ko: "석조 부처상" }, image: "/src/assets/phat.jpg" },
+        { item: { vi: "Đèn đá phong thủy", en: "Feng shui stone lamp", ko: "풍수 돌 램프" }, image: "/src/assets/den.jpg" }
+      ]
+    },
+    seafood: {
+      label: t.priceCheck.categories.seafood,
+      items: [
+        { item: { vi: "Tôm hùm (1kg)", en: "Lobster (1kg)", ko: "바닷가재 (1kg)" }, image: "/src/assets/tomhum.jpg" },
+        { item: { vi: "Cua biển (1kg)", en: "Sea crab (1kg)", ko: "꽃게 (1kg)" }, image: "/src/assets/cua.jpg" },
+        { item: { vi: "Mực tươi (1kg)", en: "Fresh squid (1kg)", ko: "신선한 오징어 (1kg)" }, image: "/src/assets/anhmuc.jpg" },
+        { item: { vi: "Sò điệp (1kg)", en: "Scallops (1kg)", ko: "가리비 (1kg)" }, image: "/src/assets/sodiep.jpg" },
+        { item: { vi: "Cá song (1kg)", en: "Grouper fish (1kg)", ko: "능성어 (1kg)" }, image: "/src/assets/casong.jpg" }
+      ]
+    },
+    tourServices: {
+      label: t.priceCheck.categories.tourServices,
+      items: [
+        { item: { vi: "Vé tham quan Ngũ Hành Sơn", en: "Ngu Hanh Son entrance ticket", ko: "응우하인선 입장권" }, image: "/src/assets/ve.jpg" },
+        { item: { vi: "Thang máy lên núi", en: "Mountain elevator", ko: "산 엘리베이터" }, image: "/src/assets/thangmay.jpg" },
+        { item: { vi: "Hướng dẫn viên (nửa ngày)", en: "Tour guide (half day)", ko: "가이드 (반나절)" }, image: "/src/assets/anh1.jpg" },
+        { item: { vi: "Thuê xe máy (1 ngày)", en: "Motorbike rental (1 day)", ko: "오토바이 대여 (1일)" }, image: "/src/assets/giuxe.jpg" }
+      ]
+    }
   };
 
   const trustedShops = [
     {
-      name: "Làng đá mỹ nghệ Non Nước",
-      category: "Đá mỹ nghệ",
-      address: "Làng Non Nước, Ngũ Hành Sơn, Đà Nẵng",
+      name: { vi: "Làng đá mỹ nghệ Non Nước", en: "Non Nuoc Stone Craft Village", ko: "논누억 석공예 마을" },
+      category: { vi: "Đá mỹ nghệ", en: "Stone craft", ko: "석공예" },
+      address: { vi: "Làng Non Nước, Ngũ Hành Sơn, Đà Nẵng", en: "Non Nuoc Village, Ngu Hanh Son, Da Nang", ko: "논누억 마을, 응우하인선, 다낭" },
       rating: "4.5/5"
     },
     {
-      name: "Nhà hàng Bé Mặn",
-      category: "Hải sản",
-      address: "Đường Huỳnh Ngọc Huệ, Ngũ Hành Sơn",
+      name: { vi: "Nhà hàng Bé Mặn", en: "Be Man Restaurant", ko: "베만 레스토랑" },
+      category: { vi: "Hải sản", en: "Seafood", ko: "해산물" },
+      address: { vi: "Đường Huỳnh Ngọc Huệ, Ngũ Hành Sơn", en: "Huynh Ngoc Hue Street, Ngu Hanh Son", ko: "휀응옥후에 거리, 응우하인선" },
       rating: "4.6/5"
     },
     {
-      name: "Cửa hàng lưu niệm Ngọc Sơn",
-      category: "Quà lưu niệm",
-      address: "Gần cổng chính Ngũ Hành Sơn",
+      name: { vi: "Cửa hàng lưu niệm Ngọc Sơn", en: "Ngoc Son Souvenir Shop", ko: "응옥선 기념품 가게" },
+      category: { vi: "Quà lưu niệm", en: "Souvenirs", ko: "기념품" },
+      address: { vi: "Gần cổng chính Ngũ Hành Sơn", en: "Near main entrance of Ngu Hanh Son", ko: "응우하인선 정문 근처" },
       rating: "4.3/5"
     }
   ];
@@ -71,10 +82,10 @@ const PriceCheck = () => {
         <div className="container mx-auto px-4 text-center">
           <DollarSign className="h-16 w-16 mx-auto mb-6 animate-float" />
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Công cụ tra giá
+            {t.priceCheck.headerTitle}
           </h1>
           <p className="text-xl max-w-3xl mx-auto">
-            Kiểm tra giá chuẩn trước khi mua - Tránh bị chém giá
+            {t.priceCheck.headerSubtitle}
           </p>
         </div>
       </section>
@@ -84,33 +95,33 @@ const PriceCheck = () => {
         <div className="container mx-auto px-4">
           <Card className="max-w-4xl mx-auto shadow-card">
             <CardHeader>
-              <CardTitle className="text-2xl">Tra cứu giá sản phẩm</CardTitle>
+              <CardTitle className="text-2xl">{t.priceCheck.searchTitle}</CardTitle>
               <CardDescription>
-                Chọn danh mục và tìm kiếm sản phẩm bạn quan tâm
+                {t.priceCheck.searchDesc}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Danh mục</label>
+                  <label className="text-sm font-medium">{t.priceCheck.categoryLabel}</label>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Chọn danh mục" />
+                      <SelectValue placeholder={t.priceCheck.selectCategory} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Quà lưu niệm">Quà lưu niệm</SelectItem>
-                      <SelectItem value="Hải sản">Hải sản</SelectItem>
-                      <SelectItem value="Dịch vụ du lịch">Dịch vụ du lịch</SelectItem>
+                      <SelectItem value="souvenirs">{t.priceCheck.categories.souvenirs}</SelectItem>
+                      <SelectItem value="seafood">{t.priceCheck.categories.seafood}</SelectItem>
+                      <SelectItem value="tourServices">{t.priceCheck.categories.tourServices}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Tìm kiếm sản phẩm</label>
+                  <label className="text-sm font-medium">{t.priceCheck.searchProduct}</label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input 
-                      placeholder="Nhập tên sản phẩm..." 
+                      placeholder={t.priceCheck.searchPlaceholder}
                       className="pl-10"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -121,7 +132,7 @@ const PriceCheck = () => {
 
               <Button className="w-full" size="lg">
                 <Search className="mr-2 h-5 w-5" />
-                Tìm kiếm giá
+                {t.priceCheck.searchButton}
               </Button>
             </CardContent>
           </Card>
@@ -131,24 +142,24 @@ const PriceCheck = () => {
       {/* Price Tables */}
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Bảng giá tham khảo</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">{t.priceCheck.referencePrice}</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {Object.entries(priceData).map(([category, items]) => (
-              <Card key={category} className="shadow-card">
+            {Object.entries(priceData).map(([key, category]) => (
+              <Card key={key} className="shadow-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Badge variant="secondary">{category}</Badge>
+                    <Badge variant="secondary">{category.label}</Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {items.map((item, index) => (
+                    {category.items.map((item, index) => (
                       <div key={index} className="pb-4 border-b last:border-b-0">
-                        <p className="font-semibold mb-3">{item.item}</p>
+                        <p className="font-semibold mb-3">{item.item[language]}</p>
                         <img 
                           src={item.image} 
-                          alt={item.item}
+                          alt={item.item[language]}
                           className="w-full h-48 object-cover rounded-lg"
                         />
                       </div>
@@ -164,14 +175,14 @@ const PriceCheck = () => {
       {/* Trusted Shops */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Địa điểm uy tín</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">{t.priceCheck.trustedShops}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {trustedShops.map((shop, index) => (
               <Card key={index} className="shadow-card hover:shadow-xl transition-shadow">
                 <CardHeader>
-                  <Badge className="w-fit mb-2">{shop.category}</Badge>
-                  <CardTitle className="text-lg">{shop.name}</CardTitle>
-                  <CardDescription>{shop.address}</CardDescription>
+                  <Badge className="w-fit mb-2">{shop.category[language]}</Badge>
+                  <CardTitle className="text-lg">{shop.name[language]}</CardTitle>
+                  <CardDescription>{shop.address[language]}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2">
@@ -192,15 +203,13 @@ const PriceCheck = () => {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-6 w-6 text-destructive" />
-                <CardTitle className="text-destructive">Lưu ý quan trọng</CardTitle>
+                <CardTitle className="text-destructive">{t.priceCheck.warningTitle}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p>• Luôn hỏi giá trước khi mua, đặc biệt với đá mỹ nghệ và hải sản</p>
-              <p>• Tham khảo giá ở nhiều cửa hàng khác nhau để so sánh</p>
-              <p>• Báo cáo cho chúng tôi nếu phát hiện nơi có dấu hiệu chém giá</p>
-              <p>• Giá có thể dao động theo mùa vụ và chất lượng sản phẩm</p>
-              <p>• Mua tại các cửa hàng có niêm yết giá rõ ràng</p>
+              {t.priceCheck.warnings.map((warning, index) => (
+                <p key={index}>• {warning}</p>
+              ))}
             </CardContent>
           </Card>
         </div>

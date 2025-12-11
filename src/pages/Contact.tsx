@@ -6,12 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 import contactHero from "@/assets/anhlienhe.jpg";
 
 const Contact = () => {
+  const { t } = useLanguage();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.");
+    toast.success(t.contact.successMessage);
   };
 
   return (
@@ -27,10 +30,10 @@ const Contact = () => {
       >
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Liên hệ với chúng tôi
+            {t.contact.headerTitle}
           </h1>
           <p className="text-xl max-w-3xl mx-auto">
-            Chúng tôi luôn sẵn sàng hỗ trợ bạn trong chuyến khám phá Ngũ Hành Sơn
+            {t.contact.headerSubtitle}
           </p>
         </div>
       </section>
@@ -43,7 +46,7 @@ const Contact = () => {
             <div className="space-y-6">
               <Card className="shadow-card">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Thông tin liên hệ</CardTitle>
+                  <CardTitle className="text-2xl">{t.contact.infoTitle}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-start gap-4">
@@ -51,7 +54,7 @@ const Contact = () => {
                       <Phone className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Hotline hỗ trợ</h3>
+                      <h3 className="font-semibold mb-1">{t.contact.hotline}</h3>
                       <p className="text-muted-foreground">0236.3961.114</p>
                       <p className="text-muted-foreground">0905.123.456</p>
                     </div>
@@ -62,7 +65,7 @@ const Contact = () => {
                       <Mail className="h-6 w-6 text-secondary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Email</h3>
+                      <h3 className="font-semibold mb-1">{t.contact.email}</h3>
                       <p className="text-muted-foreground">info@nguhanh-son.vn</p>
                       <p className="text-muted-foreground">support@nguhanh-son.vn</p>
                     </div>
@@ -73,11 +76,9 @@ const Contact = () => {
                       <MapPin className="h-6 w-6 text-nature" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Địa chỉ</h3>
+                      <h3 className="font-semibold mb-1">{t.contact.address}</h3>
                       <p className="text-muted-foreground">
-                        Phường Ngũ Hành Sơn<br />
-                        Quận Ngũ Hành Sơn<br />
-                        Thành phố Đà Nẵng
+                        {t.contact.addressText}
                       </p>
                     </div>
                   </div>
@@ -87,10 +88,10 @@ const Contact = () => {
                       <Clock className="h-6 w-6 text-accent" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Giờ làm việc</h3>
+                      <h3 className="font-semibold mb-1">{t.contact.workingHours}</h3>
                       <p className="text-muted-foreground">
-                        Thứ 2 - Chủ nhật: 6:00 - 18:00<br />
-                        Hỗ trợ trực tuyến 24/7
+                        {t.contact.workingHoursText}<br />
+                        {t.contact.onlineSupport}
                       </p>
                     </div>
                   </div>
@@ -101,13 +102,13 @@ const Contact = () => {
             {/* Contact Form */}
             <Card className="shadow-card">
               <CardHeader>
-                <CardTitle className="text-2xl">Gửi tin nhắn cho chúng tôi</CardTitle>
+                <CardTitle className="text-2xl">{t.contact.formTitle}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <label htmlFor="name" className="text-sm font-medium">
-                      Họ và tên *
+                      {t.contact.fullName} *
                     </label>
                     <Input 
                       id="name" 
@@ -118,7 +119,7 @@ const Contact = () => {
 
                   <div className="space-y-2">
                     <label htmlFor="email" className="text-sm font-medium">
-                      Email *
+                      {t.contact.email} *
                     </label>
                     <Input 
                       id="email" 
@@ -130,7 +131,7 @@ const Contact = () => {
 
                   <div className="space-y-2">
                     <label htmlFor="phone" className="text-sm font-medium">
-                      Số điện thoại
+                      {t.contact.phone}
                     </label>
                     <Input 
                       id="phone" 
@@ -141,29 +142,29 @@ const Contact = () => {
 
                   <div className="space-y-2">
                     <label htmlFor="subject" className="text-sm font-medium">
-                      Tiêu đề *
+                      {t.contact.subject} *
                     </label>
                     <Input 
                       id="subject" 
-                      placeholder="Câu hỏi về..." 
+                      placeholder="..." 
                       required 
                     />
                   </div>
 
                   <div className="space-y-2">
                     <label htmlFor="message" className="text-sm font-medium">
-                      Nội dung *
+                      {t.contact.message} *
                     </label>
                     <Textarea 
                       id="message" 
-                      placeholder="Nhập nội dung tin nhắn của bạn..."
+                      placeholder="..."
                       rows={6}
                       required 
                     />
                   </div>
 
                   <Button type="submit" size="lg" className="w-full">
-                    Gửi tin nhắn
+                    {t.contact.send}
                   </Button>
                 </form>
               </CardContent>
@@ -175,7 +176,7 @@ const Contact = () => {
       {/* Google Map */}
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-center">Vị trí trên bản đồ</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">{t.contact.mapTitle}</h2>
           <Card className="max-w-5xl mx-auto shadow-card overflow-hidden">
             <CardContent className="p-0">
               <iframe
@@ -186,7 +187,7 @@ const Contact = () => {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Vị trí Ngũ Hành Sơn"
+                title={t.contact.mapTitle}
               />
             </CardContent>
           </Card>
