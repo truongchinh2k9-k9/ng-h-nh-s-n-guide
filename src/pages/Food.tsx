@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Utensils, Star } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import AnimatedSection from "@/components/AnimatedSection";
 import foodHero from "@/assets/banhmi.jpg";
 
 const Food = () => {
@@ -121,17 +122,17 @@ const Food = () => {
       
       {/* Header */}
       <section
-        className="text-primary-foreground py-20 bg-cover bg-center"
+        className="text-primary-foreground py-20 bg-cover bg-center relative overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.35)), url(${foodHero})`,
         }}
       >
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4 text-center relative z-10">
           <Utensils className="h-16 w-16 mx-auto mb-6 animate-float" />
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-up">
             {t.food.title}
           </h1>
-          <p className="text-xl max-w-3xl mx-auto">
+          <p className="text-xl max-w-3xl mx-auto animate-fade-in-up stagger-2">
             {t.food.subtitle}
           </p>
         </div>
@@ -140,28 +141,31 @@ const Food = () => {
       {/* Introduction */}
       <section id="food-intro" className="py-12 bg-background">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+          <AnimatedSection animation="fade-in-up" className="max-w-3xl mx-auto text-center">
             <p className="text-lg text-muted-foreground leading-relaxed">
               {t.food.intro}
             </p>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Filter by category */}
       <section className="py-8 bg-muted">
         <div className="container mx-auto px-4">
-          <div className="flex gap-2 justify-center flex-wrap">
-            {categories.map((category) => (
-              <Badge 
-                key={category.vi} 
-                variant="outline" 
-                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-4 py-2 text-sm"
-              >
-                {category[language]}
-              </Badge>
-            ))}
-          </div>
+          <AnimatedSection animation="fade-in-up">
+            <div className="flex gap-2 justify-center flex-wrap">
+              {categories.map((category, index) => (
+                <Badge 
+                  key={category.vi} 
+                  variant="outline" 
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-300 px-4 py-2 text-sm hover:scale-105"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  {category[language]}
+                </Badge>
+              ))}
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -170,31 +174,39 @@ const Food = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {dishes.map((dish, index) => (
-              <Card key={index} className="shadow-card hover:shadow-xl transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <CardTitle className="text-xl">{dish.name[language]}</CardTitle>
-                    <Badge variant="secondary">{dish.category[language]}</Badge>
-                  </div>
-                  <CardDescription className="text-base">
-                    {dish.description[language]}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">{t.common.rating}:</span>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-bold text-primary">{dish.rating}</span>
-                      <span className="text-sm text-muted-foreground">({dish.reviewCount} {t.common.reviews})</span>
+              <AnimatedSection key={index} animation="fade-in-up" delay={index * 75}>
+                <Card className="shadow-card hover-lift h-full group">
+                  <CardHeader>
+                    <div className="flex items-start justify-between mb-2">
+                      <CardTitle className="text-xl transition-colors duration-200 group-hover:text-primary">
+                        {dish.name[language]}
+                      </CardTitle>
+                      <Badge variant="secondary" className="transition-transform duration-200 group-hover:scale-105">
+                        {dish.category[language]}
+                      </Badge>
                     </div>
-                  </div>
-                  <div>
-                    <span className="text-sm text-muted-foreground">{t.common.suggestedLocation}:</span>
-                    <p className="text-sm font-medium mt-1">{dish.location[language]}</p>
-                  </div>
-                </CardContent>
-              </Card>
+                    <CardDescription className="text-base">
+                      {dish.description[language]}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">{t.common.rating}:</span>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 transition-transform duration-200 group-hover:scale-110" />
+                        <span className="font-bold text-primary">{dish.rating}</span>
+                        <span className="text-sm text-muted-foreground">({dish.reviewCount} {t.common.reviews})</span>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-sm text-muted-foreground">{t.common.suggestedLocation}:</span>
+                      <p className="text-sm font-medium mt-1 transition-colors duration-200 group-hover:text-primary">
+                        {dish.location[language]}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -203,17 +215,20 @@ const Food = () => {
       {/* Tips */}
       <section className="py-16 bg-nature text-primary-foreground">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
+          <AnimatedSection animation="blur-in" className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">{t.food.tips}</h2>
             <ul className="space-y-4 text-lg">
               {t.food.tipsList.map((tip, index) => (
-                <li key={index} className="flex gap-3">
+                <li 
+                  key={index} 
+                  className="flex gap-3 transition-transform duration-200 hover:translate-x-2"
+                >
                   <span className="font-bold">✓</span>
                   <span>{tip}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 

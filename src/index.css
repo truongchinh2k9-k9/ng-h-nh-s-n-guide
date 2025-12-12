@@ -111,3 +111,58 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Animation utility classes */
+@layer utilities {
+  /* Hover card effect */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-xl;
+  }
+
+  /* Image zoom on hover */
+  .img-zoom {
+    @apply transition-transform duration-500 ease-out;
+  }
+  .group:hover .img-zoom {
+    @apply scale-105;
+  }
+
+  /* Stagger animation delays */
+  .stagger-1 { animation-delay: 100ms; }
+  .stagger-2 { animation-delay: 200ms; }
+  .stagger-3 { animation-delay: 300ms; }
+  .stagger-4 { animation-delay: 400ms; }
+  .stagger-5 { animation-delay: 500ms; }
+  .stagger-6 { animation-delay: 600ms; }
+
+  /* Smooth underline animation for links */
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-full h-0.5 bg-primary scale-x-0 origin-right transition-transform duration-300;
+  }
+  .link-underline:hover::after {
+    @apply scale-x-100 origin-left;
+  }
+
+  /* Loading skeleton shimmer */
+  .skeleton-shimmer {
+    @apply bg-gradient-to-r from-muted via-muted-foreground/10 to-muted bg-[length:200%_100%] animate-shimmer;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

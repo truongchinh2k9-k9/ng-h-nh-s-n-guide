@@ -6,6 +6,7 @@ import { Mountain, Utensils, Map as MapIcon, DollarSign } from "lucide-react";
 import WeatherCard from "@/components/WeatherCard";
 import ItineraryCard from "@/components/ItineraryCard";
 import { Link } from "react-router-dom";
+import AnimatedSection from "@/components/AnimatedSection";
 import heroImage from "@/assets/hero-ngu-hanh-son.jpg";
 import marbleCraft from "@/assets/langda.jpg";
 import foodImage from "@/assets/doan.jpg";
@@ -14,6 +15,37 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const Index = () => {
   const { t } = useLanguage();
 
+  const quickActions = [
+    {
+      to: "/about#five-mountain",
+      icon: Mountain,
+      iconColor: "text-primary",
+      title: t.index.quickActions.aboutTitle,
+      desc: t.index.quickActions.aboutDesc,
+    },
+    {
+      to: "/food#food-intro",
+      icon: Utensils,
+      iconColor: "text-secondary",
+      title: t.index.quickActions.foodTitle,
+      desc: t.index.quickActions.foodDesc,
+    },
+    {
+      to: "/map",
+      icon: MapIcon,
+      iconColor: "text-nature",
+      title: t.index.quickActions.mapTitle,
+      desc: t.index.quickActions.mapDesc,
+    },
+    {
+      to: "/price-check#price-search",
+      icon: DollarSign,
+      iconColor: "text-accent",
+      title: t.index.quickActions.priceTitle,
+      desc: t.index.quickActions.priceDesc,
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -21,27 +53,27 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
           <div className="absolute inset-0 bg-gradient-overlay" />
         </div>
         
-        <div className="relative z-10 text-center text-primary-foreground px-4 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+        <div className="relative z-10 text-center text-primary-foreground px-4">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up">
             {t.hero.title}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-fade-in-up stagger-2">
             {t.hero.subtitle}
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex gap-4 justify-center flex-wrap animate-fade-in-up stagger-3">
             <Link to="/about">
-              <Button size="lg" className="text-lg">
+              <Button size="lg" className="text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg">
                 {t.common.explore}
               </Button>
             </Link>
             <Link to="/map">
-              <Button size="lg" variant="secondary" className="text-lg">
+              <Button size="lg" variant="secondary" className="text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg">
                 {t.common.viewMap}
               </Button>
             </Link>
@@ -52,14 +84,14 @@ const Index = () => {
       {/* Introduction */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center animate-slide-up">
+          <AnimatedSection animation="fade-in-up" className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               {t.index.introTitle}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
               {t.index.introText}
             </p>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -67,45 +99,19 @@ const Index = () => {
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/about#five-mountain">
-                <CardHeader>
-                  <Mountain className="h-12 w-12 text-primary mb-2" />
-                  <CardTitle>{t.index.quickActions.aboutTitle}</CardTitle>
-                  <CardDescription>{t.index.quickActions.aboutDesc}</CardDescription>
-                </CardHeader>
-              </Link>
-            </Card>
-
-            <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/food#food-intro">
-                <CardHeader>
-                  <Utensils className="h-12 w-12 text-secondary mb-2" />
-                  <CardTitle>{t.index.quickActions.foodTitle}</CardTitle>
-                  <CardDescription>{t.index.quickActions.foodDesc}</CardDescription>
-                </CardHeader>
-              </Link>
-            </Card>
-
-            <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/map">
-                <CardHeader>
-                  <MapIcon className="h-12 w-12 text-nature mb-2" />
-                  <CardTitle>{t.index.quickActions.mapTitle}</CardTitle>
-                  <CardDescription>{t.index.quickActions.mapDesc}</CardDescription>
-                </CardHeader>
-              </Link>
-            </Card>
-
-            <Card className="hover:shadow-card transition-shadow cursor-pointer">
-              <Link to="/price-check#price-search">
-                <CardHeader>
-                  <DollarSign className="h-12 w-12 text-accent mb-2" />
-                  <CardTitle>{t.index.quickActions.priceTitle}</CardTitle>
-                  <CardDescription>{t.index.quickActions.priceDesc}</CardDescription>
-                </CardHeader>
-              </Link>
-            </Card>
+            {quickActions.map((action, index) => (
+              <AnimatedSection key={action.to} animation="fade-in-up" delay={index * 100}>
+                <Card className="hover-lift cursor-pointer h-full group">
+                  <Link to={action.to}>
+                    <CardHeader>
+                      <action.icon className={`h-12 w-12 ${action.iconColor} mb-2 transition-transform duration-300 group-hover:scale-110`} />
+                      <CardTitle className="transition-colors duration-200 group-hover:text-primary">{action.title}</CardTitle>
+                      <CardDescription>{action.desc}</CardDescription>
+                    </CardHeader>
+                  </Link>
+                </Card>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
       </section>
@@ -114,8 +120,12 @@ const Index = () => {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <WeatherCard />
-            <ItineraryCard />
+            <AnimatedSection animation="fade-in-left">
+              <WeatherCard />
+            </AnimatedSection>
+            <AnimatedSection animation="fade-in-right">
+              <ItineraryCard />
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -123,35 +133,56 @@ const Index = () => {
       {/* Featured Content */}
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            {t.index.highlights}
-          </h2>
+          <AnimatedSection animation="fade-in-up" className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold">
+              {t.index.highlights}
+            </h2>
+          </AnimatedSection>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="overflow-hidden shadow-card hover:shadow-xl transition-shadow">
-              <div className="h-64 bg-cover bg-center" style={{ backgroundImage: `url(${marbleCraft})` }} />
-              <CardHeader>
-                <CardTitle className="text-2xl">{t.index.marbleVillageTitle}</CardTitle>
-                <CardDescription className="text-base">{t.index.marbleVillageDesc}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link to="/about#non-nuoc">
-                  <Button>{t.common.learnMore}</Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <AnimatedSection animation="fade-in-left">
+              <Card className="overflow-hidden shadow-card hover-lift group">
+                <div className="h-64 overflow-hidden">
+                  <div 
+                    className="h-full w-full bg-cover bg-center img-zoom" 
+                    style={{ backgroundImage: `url(${marbleCraft})` }} 
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-2xl transition-colors duration-200 group-hover:text-primary">
+                    {t.index.marbleVillageTitle}
+                  </CardTitle>
+                  <CardDescription className="text-base">{t.index.marbleVillageDesc}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to="/about#non-nuoc">
+                    <Button className="transition-all duration-300 hover:scale-105">{t.common.learnMore}</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </AnimatedSection>
 
-            <Card className="overflow-hidden shadow-card hover:shadow-xl transition-shadow">
-              <div className="h-64 bg-cover bg-center" style={{ backgroundImage: `url(${foodImage})` }} />
-              <CardHeader>
-                <CardTitle className="text-2xl">{t.index.localCuisineTitle}</CardTitle>
-                <CardDescription className="text-base">{t.index.localCuisineDesc}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link to="/food#food-intro">
-                  <Button>{t.index.exploreFood}</Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <AnimatedSection animation="fade-in-right">
+              <Card className="overflow-hidden shadow-card hover-lift group">
+                <div className="h-64 overflow-hidden">
+                  <div 
+                    className="h-full w-full bg-cover bg-center img-zoom" 
+                    style={{ backgroundImage: `url(${foodImage})` }} 
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-2xl transition-colors duration-200 group-hover:text-primary">
+                    {t.index.localCuisineTitle}
+                  </CardTitle>
+                  <CardDescription className="text-base">{t.index.localCuisineDesc}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to="/food#food-intro">
+                    <Button className="transition-all duration-300 hover:scale-105">{t.index.exploreFood}</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </AnimatedSection>
           </div>
         </div>
       </section>
