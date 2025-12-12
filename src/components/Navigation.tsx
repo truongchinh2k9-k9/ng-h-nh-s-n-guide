@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const languageOptions: { code: Language; label: string; flag: string }[] = [
   { code: "vi", label: "Tiếng Việt", flag: "🇻🇳" },
@@ -80,6 +81,9 @@ const Navigation = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
@@ -131,6 +135,16 @@ const Navigation = () => {
                     {lang.label}
                   </Button>
                 ))}
+              </div>
+              
+              {/* Mobile Theme Toggle */}
+              <div className="border-t border-border pt-2 mt-2 px-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {language === "vi" ? "Chế độ tối" : language === "en" ? "Dark mode" : "다크 모드"}
+                  </span>
+                  <ThemeToggle />
+                </div>
               </div>
             </div>
           </div>
