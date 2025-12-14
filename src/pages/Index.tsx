@@ -10,6 +10,10 @@ import AnimatedSection from "@/components/AnimatedSection";
 import heroImage from "@/assets/hero-ngu-hanh-son.jpg";
 import marbleCraft from "@/assets/langda.jpg";
 import foodImage from "@/assets/doan.jpg";
+import aboutBg from "@/assets/nuinhs.jpg";
+import foodBg from "@/assets/vietnamese-food.jpg";
+import mapBg from "@/assets/bando.jpg";
+import priceBg from "@/assets/tranhda.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
@@ -19,30 +23,34 @@ const Index = () => {
     {
       to: "/about#five-mountain",
       icon: Mountain,
-      iconColor: "text-primary",
+      iconColor: "text-white",
       title: t.index.quickActions.aboutTitle,
       desc: t.index.quickActions.aboutDesc,
+      bgImage: aboutBg,
     },
     {
       to: "/food#food-intro",
       icon: Utensils,
-      iconColor: "text-secondary",
+      iconColor: "text-white",
       title: t.index.quickActions.foodTitle,
       desc: t.index.quickActions.foodDesc,
+      bgImage: foodBg,
     },
     {
       to: "/map",
       icon: MapIcon,
-      iconColor: "text-nature",
+      iconColor: "text-white",
       title: t.index.quickActions.mapTitle,
       desc: t.index.quickActions.mapDesc,
+      bgImage: mapBg,
     },
     {
       to: "/price-check#price-search",
       icon: DollarSign,
-      iconColor: "text-accent",
+      iconColor: "text-white",
       title: t.index.quickActions.priceTitle,
       desc: t.index.quickActions.priceDesc,
+      bgImage: priceBg,
     },
   ];
 
@@ -101,15 +109,24 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {quickActions.map((action, index) => (
               <AnimatedSection key={action.to} animation="fade-in-up" delay={index * 100}>
-                <Card className="hover-lift cursor-pointer h-full group">
-                  <Link to={action.to}>
-                    <CardHeader>
-                      <action.icon className={`h-12 w-12 ${action.iconColor} mb-2 transition-transform duration-300 group-hover:scale-110`} />
-                      <CardTitle className="transition-colors duration-200 group-hover:text-primary">{action.title}</CardTitle>
-                      <CardDescription>{action.desc}</CardDescription>
-                    </CardHeader>
-                  </Link>
-                </Card>
+                <Link to={action.to}>
+                  <Card className="hover-lift cursor-pointer h-full group relative overflow-hidden min-h-[200px]">
+                    {/* Background Image */}
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                      style={{ backgroundImage: `url(${action.bgImage})` }}
+                    />
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-300" />
+                    
+                    {/* Content */}
+                    <div className="relative z-10 p-6 h-full flex flex-col justify-end">
+                      <action.icon className={`h-10 w-10 ${action.iconColor} mb-3 transition-transform duration-300 group-hover:scale-110 drop-shadow-lg`} />
+                      <CardTitle className="text-white transition-colors duration-200 drop-shadow-lg">{action.title}</CardTitle>
+                      <CardDescription className="text-white/90 drop-shadow-md">{action.desc}</CardDescription>
+                    </div>
+                  </Card>
+                </Link>
               </AnimatedSection>
             ))}
           </div>
