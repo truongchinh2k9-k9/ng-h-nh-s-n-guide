@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Cloud, Sun, CloudRain, CloudSnow, Zap, Wind } from "lucide-react";
+import { Cloud, Sun, CloudRain, CloudSnow, Zap, Wind, Thermometer, Droplets } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
@@ -19,6 +19,15 @@ function weatherCodeToIcon(code: number) {
   if ([71, 73, 75].includes(code)) return CloudSnow;
   if ([95].includes(code)) return Zap;
   return Cloud;
+}
+
+function weatherCodeToColor(code: number) {
+  if (code === 0) return "text-yellow-500";
+  if ([1, 2, 3, 45, 48].includes(code)) return "text-gray-500";
+  if ([51, 53, 55, 61, 63, 65].includes(code)) return "text-blue-500";
+  if ([71, 73, 75].includes(code)) return "text-sky-300";
+  if ([95].includes(code)) return "text-purple-500";
+  return "text-gray-500";
 }
 
 export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, timezone = "Asia/Ho_Chi_Minh" }: Props) {
@@ -84,64 +93,123 @@ export default function WeatherCard({ latitude = 16.0021, longitude = 108.2658, 
   const dateLocale = language === "vi" ? "vi-VN" : language === "ko" ? "ko-KR" : "en-US";
 
   return (
-    <Card className="shadow-card">
-      <CardHeader>
+    <Card className="shadow-card overflow-hidden animate-fade-in">
+      <CardHeader className="bg-gradient-to-r from-primary/10 to-secondary/10 pb-4">
         <div className="flex items-center gap-3">
-          <Cloud className="h-8 w-8 text-primary" />
-          <CardTitle>{t.weather.title}</CardTitle>
+          <div className="p-2 bg-primary/20 rounded-full animate-pulse-soft">
+            <Cloud className="h-7 w-7 text-primary" />
+          </div>
+          <CardTitle className="text-lg">{t.weather.title}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
-        {loading && <div className="text-muted-foreground">{t.weather.loading}</div>}
-        {error && <div className="text-destructive">{error}</div>}
+      <CardContent className="pt-4">
+        {loading && (
+          <div className="space-y-3">
+            <div className="h-16 bg-muted rounded-lg skeleton-shimmer" />
+            <div className="h-10 bg-muted rounded-lg skeleton-shimmer" />
+            <div className="space-y-2">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-14 bg-muted rounded-lg skeleton-shimmer" style={{ animationDelay: `${i * 100}ms` }} />
+              ))}
+            </div>
+          </div>
+        )}
+        {error && <div className="text-destructive p-4 bg-destructive/10 rounded-lg">{error}</div>}
 
         {data && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm text-muted-foreground">{t.weather.location}</div>
-                <div className="text-3xl font-bold">
-                  {unit === "C" ? Math.round(data.current_weather.temperature) : cToF(data.current_weather.temperature)}°{unit}
+          <div className="space-y-5">
+            {/* Current Weather - Hero Style */}
+            <div className="relative p-4 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-xl border border-border/50 animate-scale-in">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider">{t.weather.location}</div>
+                  <div className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    {unit === "C" ? Math.round(data.current_weather.temperature) : cToF(data.current_weather.temperature)}°{unit}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Wind className="h-4 w-4" />
+                    <span>{data.current_weather.windspeed} km/h</span>
+                  </div>
                 </div>
-                <div className="text-sm text-muted-foreground">{t.weather.wind}: {data.current_weather.windspeed} km/h</div>
-              </div>
 
-              <div className="text-right">
-                <div className="text-sm text-muted-foreground">{t.weather.status}</div>
-                <div className="font-medium flex items-center gap-2 justify-end">
-                  {(() => {
-                    const Icon = weatherCodeToIcon(data.current_weather.weathercode);
-                    return <Icon className="h-6 w-6" />;
-                  })()}
-                  <span>{weatherCodeToText(data.current_weather.weathercode)}</span>
+                <div className="text-right">
+                  <div className="mb-2">
+                    {(() => {
+                      const Icon = weatherCodeToIcon(data.current_weather.weathercode);
+                      const colorClass = weatherCodeToColor(data.current_weather.weathercode);
+                      return (
+                        <div className={`p-3 rounded-full bg-background/80 shadow-lg inline-block animate-bounce-subtle ${colorClass}`}>
+                          <Icon className="h-10 w-10" />
+                        </div>
+                      );
+                    })()}
+                  </div>
+                  <div className="text-sm font-medium">{weatherCodeToText(data.current_weather.weathercode)}</div>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <Button variant={unit === "C" ? undefined : "outline"} size="sm" onClick={() => setUnit("C")}>°C</Button>
-              <Button variant={unit === "F" ? undefined : "outline"} size="sm" onClick={() => setUnit("F")}>°F</Button>
+            {/* Unit Toggle */}
+            <div className="flex gap-2 justify-center">
+              <Button 
+                variant={unit === "C" ? "default" : "outline"} 
+                size="sm" 
+                onClick={() => setUnit("C")}
+                className="transition-all duration-300 hover:scale-105"
+              >
+                °C
+              </Button>
+              <Button 
+                variant={unit === "F" ? "default" : "outline"} 
+                size="sm" 
+                onClick={() => setUnit("F")}
+                className="transition-all duration-300 hover:scale-105"
+              >
+                °F
+              </Button>
             </div>
 
+            {/* Forecast */}
             <div>
-              <div className="text-sm text-muted-foreground mb-2">{t.weather.forecast}</div>
+              <div className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                <Thermometer className="h-4 w-4" />
+                {t.weather.forecast}
+              </div>
               <div className="grid grid-cols-1 gap-2">
                 {data.daily.time.map((d: string, i: number) => (
-                  <div key={d} className="flex items-center justify-between p-2 bg-muted rounded">
+                  <div 
+                    key={d} 
+                    className="flex items-center justify-between p-3 bg-muted/50 hover:bg-muted rounded-lg transition-all duration-300 hover:translate-x-1 hover:shadow-md group"
+                    style={{ animationDelay: `${i * 50}ms` }}
+                  >
                     <div className="flex items-center gap-3">
                       {(() => {
                         const Icon = weatherCodeToIcon(data.daily.weathercode[i]);
-                        return <Icon className="h-5 w-5" />;
+                        const colorClass = weatherCodeToColor(data.daily.weathercode[i]);
+                        return (
+                          <div className={`p-1.5 rounded-full bg-background shadow-sm group-hover:scale-110 transition-transform ${colorClass}`}>
+                            <Icon className="h-5 w-5" />
+                          </div>
+                        );
                       })()}
-                      <div className="text-sm">
-                        {new Date(d).toLocaleDateString(dateLocale, { weekday: "short", day: "numeric" })}
+                      <div>
+                        <div className="text-sm font-medium">
+                          {new Date(d).toLocaleDateString(dateLocale, { weekday: "short", day: "numeric" })}
+                        </div>
                         <div className="text-xs text-muted-foreground">{weatherCodeToText(data.daily.weathercode[i])}</div>
                       </div>
                     </div>
 
-                    <div className="text-sm font-medium text-right">
-                      {unit === "C" ? Math.round(data.daily.temperature_2m_max[i]) : cToF(data.daily.temperature_2m_max[i])}° / {unit === "C" ? Math.round(data.daily.temperature_2m_min[i]) : cToF(data.daily.temperature_2m_min[i])}°
-                      <div className="text-xs text-muted-foreground">{t.weather.rain}: {data.daily.precipitation_sum[i]} mm</div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold">
+                        <span className="text-orange-500">{unit === "C" ? Math.round(data.daily.temperature_2m_max[i]) : cToF(data.daily.temperature_2m_max[i])}°</span>
+                        <span className="text-muted-foreground mx-1">/</span>
+                        <span className="text-blue-500">{unit === "C" ? Math.round(data.daily.temperature_2m_min[i]) : cToF(data.daily.temperature_2m_min[i])}°</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground flex items-center gap-1 justify-end">
+                        <Droplets className="h-3 w-3 text-blue-400" />
+                        {data.daily.precipitation_sum[i]} mm
+                      </div>
                     </div>
                   </div>
                 ))}
