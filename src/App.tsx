@@ -14,6 +14,9 @@ import Map from "./pages/Map";
 import PriceCheck from "./pages/PriceCheck";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Mountains from "./pages/Mountains";
+import Culture from "./pages/Culture";
+import Activities from "./pages/Activities";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +36,9 @@ const App = () => (
               <Route path="/map" element={<Map />} />
               <Route path="/price-check" element={<PriceCheck />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/mountains" element={<Mountains />} />
+              <Route path="/culture" element={<Culture />} />
+              <Route path="/activities" element={<Activities />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
